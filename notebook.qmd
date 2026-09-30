@@ -1412,7 +1412,10 @@ always resolves to the latest version.
 ## Where to go next
 
 - **The NaNDA catalogue on openICPSR**, <https://www.openicpsr.org/openicpsr/nanda>.
-  Every dataset, every geography, free to download.
+  Every dataset, every geography, free to download. When a NaNDA measure ends up in
+  something you publish, cite the dataset itself by its DOI (each one has a ready-made
+  citation on its ICPSR page), not just these materials: that is a condition of the
+  download, and it is how the archive stays funded.
 - **The NaNDA website**, <https://nanda.isr.umich.edu/>. Documentation, news, and how to
   reach the team.
 - **Our published merge code**: {{< var crosswalk.merge_code_name >}}
