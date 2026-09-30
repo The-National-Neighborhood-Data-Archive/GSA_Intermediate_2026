@@ -236,11 +236,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#sec-join" id="toc-sec-join" class="nav-link" data-scroll-target="#sec-join">4. Which boundaries? Joining, and checking the join</a>
   <ul class="collapse">
-  <li><a href="#carrying-social-services-forward" id="toc-carrying-social-services-forward" class="nav-link" data-scroll-target="#carrying-social-services-forward">Carrying Social Services forward</a></li>
+  <li><a href="#sec-carry-forward" id="toc-sec-carry-forward" class="nav-link" data-scroll-target="#sec-carry-forward">Carrying Social Services forward</a></li>
   <li><a href="#the-join" id="toc-the-join" class="nav-link" data-scroll-target="#the-join">The join</a></li>
   <li><a href="#socioeconomic-status-on-2010-boundaries" id="toc-socioeconomic-status-on-2010-boundaries" class="nav-link" data-scroll-target="#socioeconomic-status-on-2010-boundaries">Socioeconomic status, on 2010 boundaries</a></li>
-  <li><a href="#vs-2020-boundaries-side-by-side" id="toc-vs-2020-boundaries-side-by-side" class="nav-link" data-scroll-target="#vs-2020-boundaries-side-by-side">2010 vs 2020 boundaries, side by side</a></li>
-  <li><a href="#who-did-you-lose" id="toc-who-did-you-lose" class="nav-link" data-scroll-target="#who-did-you-lose">Who did you lose?</a></li>
+  <li><a href="#sec-side-by-side" id="toc-sec-side-by-side" class="nav-link" data-scroll-target="#sec-side-by-side">2010 vs 2020 boundaries, side by side</a></li>
+  <li><a href="#sec-who-lost" id="toc-sec-who-lost" class="nav-link" data-scroll-target="#sec-who-lost">Who did you lose?</a></li>
   <li><a href="#a-toy-model-to-show-the-join-was-for-something" id="toc-a-toy-model-to-show-the-join-was-for-something" class="nav-link" data-scroll-target="#a-toy-model-to-show-the-join-was-for-something">A toy model, to show the join was for something</a></li>
   </ul></li>
   <li><a href="#sec-nowwhat" id="toc-sec-nowwhat" class="nav-link" data-scroll-target="#sec-nowwhat">5. Now what?</a>
@@ -294,6 +294,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="callout-body-container callout-body">
 <p>Robert Melendez runs this code live. Every output is already on this page, so you can read along without installing anything. To run it later, download the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">materials ZIP</a>.</p>
 <p><strong>Work in Stata or Python?</strong> Every code block has three tabs. The live session and the rendered output are R. The Stata and Python tabs show the same step in your language. Pick a tab once and the whole page follows.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>What you’ll learn
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end you will be able to:</p>
+<ul>
+<li><strong>Say which location identifier your data carry</strong>, how complete it is, and what it identifies. <a href="#sec-identifiers">Section 1</a></li>
+<li><strong>Decide whether geocoding addresses is the right route</strong> for your study, and what it costs. <a href="#sec-geocoding">Section 2</a></li>
+<li><strong>Tell a ZIP code from a ZCTA</strong>, and turn one into the other with a crosswalk without losing rows. <a href="#sec-crosswalk">Section 3</a></li>
+<li><strong>Match the census boundary year</strong> across your codes, the crosswalk, and the NaNDA file, and recognize what goes wrong when they disagree. <a href="#sec-join">Section 4</a>, <a href="#sec-side-by-side">side by side</a></li>
+<li><strong>Carry a measure past its last published year</strong> and write that decision into your methods. <a href="#sec-carry-forward">Carrying Social Services forward</a></li>
+<li><strong>Check a join</strong>: count who matched, name why the rest did not, and test whether the unmatched rows differ from the matched. <a href="#sec-who-lost">Who did you lose?</a></li>
+<li><strong>Ask the four questions</strong> before every link, and cite the NaNDA datasets you use. <a href="#four-questions">Four questions</a>, <a href="#sec-nowwhat">Section 5</a></li>
+</ul>
 </div>
 </div>
 <hr>
@@ -1006,8 +1028,8 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 <li><strong>Silent error 2: never looking at what fell out.</strong> A left join keeps every row of your data and fills NaNDA’s columns with <code>NA</code> where nothing matched. An inner join drops those rows. Either way the analysis proceeds. Stata’s <code>merge</code> reports <code>_merge</code>. R’s <a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">dplyr</a> joins report nothing, so the count has to be built by hand.</li>
 </ul>
 <p>The rest of this section is mostly diagnostics. The join is the cheap part.</p>
-<section id="carrying-social-services-forward" class="level3">
-<h3 class="anchored" data-anchor-id="carrying-social-services-forward">Carrying Social Services forward</h3>
+<section id="sec-carry-forward" class="level3">
+<h3 class="anchored" data-anchor-id="sec-carry-forward">Carrying Social Services forward</h3>
 <p>Social Services ends in 2022; our data runs to 2025. Before joining, we give every ZCTA rows through 2025 and carry its most recent values into them. <strong>That is a decision, not a fix.</strong> The 2023 to 2025 rows will match, and what they match is 2022’s numbers. Write the decision into your methods, because nothing in the output will.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false" href="">Stata</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false" href="">Python</a></li></ul>
@@ -1277,8 +1299,8 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 </div>
 </div>
 </section>
-<section id="vs-2020-boundaries-side-by-side" class="level3">
-<h3 class="anchored" data-anchor-id="vs-2020-boundaries-side-by-side">2010 vs 2020 boundaries, side by side</h3>
+<section id="sec-side-by-side" class="level3">
+<h3 class="anchored" data-anchor-id="sec-side-by-side">2010 vs 2020 boundaries, side by side</h3>
 <p>The same join, run twice with the same crosswalked codes: once against the 2010-boundary SES file and once against the 2020-boundary file. Both runs succeed. Both match the same rows at the same rate, because most ZCTAs kept their five digits from one census to the next. <strong>What differs is the value attached to each row.</strong> The same people get a different mean affluence depending on which file was open. Nothing in either output says which run paired the codes with the boundaries they were drawn for. Only you can know that, from the documentation of each input.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false" href="">Stata</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-3" role="tab" aria-controls="tabset-11-3" aria-selected="false" href="">Python</a></li></ul>
@@ -1528,8 +1550,8 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 </div>
 </div>
 </section>
-<section id="who-did-you-lose" class="level3">
-<h3 class="anchored" data-anchor-id="who-did-you-lose">Who did you lose?</h3>
+<section id="sec-who-lost" class="level3">
+<h3 class="anchored" data-anchor-id="sec-who-lost">Who did you lose?</h3>
 <p>A match rate is a headline, not a diagnostic. It tells you the size of the loss and nothing about its shape. The diagnostic is whether the rows that did not match differ from the rows that did.</p>
 <p>In this file about 17% of rows have no ZIP at all. If those rows are disproportionately rural, older, or in worse health, the matched sample is no longer the sample you drew. Every neighborhood coefficient you estimate is then conditional on having a mailable address. <strong>That is a selection problem, and it does not announce itself.</strong></p>
 <p>Neither language does this for you. dplyr’s joins are silent, and Stata’s <code>_merge</code> reports the count, not the composition. Isolate the unmatched rows and put their means beside the matched rows’ means on the variables the study is about.</p>
@@ -1963,7 +1985,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </div>
 </div>
 </div>
-<div class="callout callout-style-default callout-tip callout-titled">
+<div id="four-questions" class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
