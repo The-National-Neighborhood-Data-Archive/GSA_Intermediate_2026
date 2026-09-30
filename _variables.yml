@@ -33,7 +33,9 @@ site:
   short_url: "https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/"   # no go.umich.edu link minted; same as url, not rendered anywhere
   repo: "https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026"
   zip: "https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip"
-  doi: "DOI assigned at the v1.0.0 release (Zenodo); until then, cite the repository URL"   # replace with the DOI once Zenodo mints it, then re-render
+  doi: "10.5281/zenodo.23071407"          # concept DOI (Zenodo); always resolves to the latest version
+  doi_url: "https://doi.org/10.5281/zenodo.23071407"
+  doi_v1: "10.5281/zenodo.23071408"       # version DOI for v1.0.0
 
 nanda:
   url: "https://nanda.isr.umich.edu/"

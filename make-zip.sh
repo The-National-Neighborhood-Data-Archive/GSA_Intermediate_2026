@@ -128,6 +128,8 @@ already rendered, is at:
 
   https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/
 
+Cite it: https://doi.org/10.5281/zenodo.23071407
+
 What's in here:
   site/      the notebook and the before-you-begin page, saved for offline
              reading. Open site/notebook.html in any browser; no internet needed.

@@ -1462,7 +1462,7 @@ version.
 | This notebook | [Linking NaNDA With Your Data: notebook]({{< var site.url >}}notebook.html) |
 | Everything, zipped | [Workshop materials (ZIP)]({{< var site.zip >}}) |
 | Source | [GitHub repository]({{< var site.repo >}}) |
-| Cite it | {{< var site.doi >}} |
+| Cite it | [DOI {{< var site.doi >}}]({{< var site.doi_url >}}) |
 
 ### Where to go next
 

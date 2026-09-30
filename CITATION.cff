@@ -20,6 +20,14 @@ authors:
     affiliation: "University of Michigan, Institute for Social Research"
 repository-code: "https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026"
 url: "https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/"
+doi: 10.5281/zenodo.23071407
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23071407
+    description: "Concept DOI; resolves to the latest version"
+  - type: doi
+    value: 10.5281/zenodo.23071408
+    description: "Version 1.0.0"
 license: MIT
 date-released: 2026-10-01
 version: 1.0.0

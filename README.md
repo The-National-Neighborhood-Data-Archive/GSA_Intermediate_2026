@@ -1,5 +1,7 @@
 # Linking NaNDA With Your Data
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23071407.svg)](https://doi.org/10.5281/zenodo.23071407)
+
 Materials for **Breakout 2 (Intermediate)** of *Using Neighborhood Data in Aging
 Research: the National Neighborhood Data Archive (NaNDA)*, a workshop at the GSA 2026
 Annual Scientific Meeting, online, October 7, 2026.
@@ -28,7 +30,28 @@ the ICPSR downloads in `data/nanda/` first (its README says which ones).
 
 ## Citing
 
-See `CITATION.cff`. The DOI resolves to the latest version.
+Clary, W., Melendez, R., Noppert, G., Gypin, L., & Clarke, P. (2026). *Linking NaNDA
+With Your Data: GSA 2026 workshop materials* (Version 1.0.0) [Workshop materials].
+National Neighborhood Data Archive, Institute for Social Research, University of
+Michigan. https://doi.org/10.5281/zenodo.23071407
+
+```bibtex
+@misc{clary2026linking,
+  author    = {Clary, William and Melendez, Robert and Noppert, Grace and
+               Gypin, Lindsay and Clarke, Philippa},
+  title     = {Linking {NaNDA} With Your Data: {GSA} 2026 workshop materials},
+  year      = {2026},
+  version   = {1.0.0},
+  publisher = {National Neighborhood Data Archive, Institute for Social Research,
+               University of Michigan},
+  doi       = {10.5281/zenodo.23071407},
+  url       = {https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/}
+}
+```
+
+The DOI is the concept DOI and always resolves to the latest version. `CITATION.cff`
+carries the same metadata for citation managers and GitHub's "Cite this repository"
+button.
 
 ## Presenters
 

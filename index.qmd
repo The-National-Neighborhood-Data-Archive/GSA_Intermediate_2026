@@ -24,7 +24,7 @@ machine.
 | Notebook (read-along, all outputs shown) | [Linking NaNDA With Your Data: notebook]({{< var site.url >}}notebook.html) |
 | Everything as a single download | [Workshop materials (ZIP)]({{< var site.zip >}}) |
 | Source and version history | [GitHub repository]({{< var site.repo >}}) |
-| Archived and citable | {{< var site.doi >}} |
+| Archived and citable | [DOI {{< var site.doi >}}]({{< var site.doi_url >}}) |
 
 The ZIP contains:
 
