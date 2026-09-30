@@ -92,18 +92,3 @@ You have used R, Stata, or another statistical package to open a dataset and joi
 tables. This is **not** an R lesson. It is about what goes wrong when you link
 individual-level data to neighborhood-level data, and how to catch it, in whichever
 language you use.
-
-## What's out of scope
-
-Geocoding street addresses to census tracts. The synthetic dataset includes addresses,
-and Section 2 of the notebook explains the route, but the code stays on ZIP codes.
-
-## Getting in
-
-
-- **Date:** {{< var session.date >}}
-- **Length:** {{< var session.length >}}
-- **Platform:** {{< var session.platform >}}
-- **Joining:** GSA sends the meeting link to registrants; it is not posted here.
-- **Technical trouble during the session:** GSA's meeting help desk, through the
-  meeting platform. Trouble with the materials: the address above.

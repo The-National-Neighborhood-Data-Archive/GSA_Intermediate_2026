@@ -16,9 +16,9 @@ format:
 ::: {.callout-tip}
 ### You don't need to run this
 
-{{< var session.presenter >}} runs this code live. Every output is already on this
-page, so you can read along without installing anything. To run it later, download the
-[materials ZIP]({{< var site.zip >}}).
+You don't have to run this live to follow along. {{< var session.presenter >}} runs
+the code on screen, and every output is already on this page. If you want to run it
+later, the code is in the [materials ZIP]({{< var site.zip >}}).
 
 **Work in Stata or Python?** Every code block has three tabs. The live session and the
 rendered output are R. The Stata and Python tabs show the same step in your language.
@@ -32,8 +32,8 @@ By the end you will be able to:
 
 - **Say which location identifier your data carry**, how complete it is, and what it
   identifies. [Section 1](#sec-identifiers)
-- **Decide whether geocoding addresses is the right route** for your study, and what
-  it costs. [Section 2](#sec-geocoding)
+- **Decide whether geocoding addresses is the right route** for your study.
+  [Section 2](#sec-geocoding)
 - **Tell a ZIP code from a ZCTA**, and turn one into the other with a crosswalk
   without losing rows. [Section 3](#sec-crosswalk)
 - **Test whether the rows you lost differ from the rows you kept**, before anything
@@ -708,7 +708,7 @@ the NaNDA file, where a second set of reasons can drop rows.
 
 The join is three lines, and nobody gets the three lines wrong. If a column name is
 misspelled the software says so. What people get wrong happens on either side of those
-lines and makes no sound.
+lines and can be easily missed.
 
 - **Silent error 1: boundaries.** ZCTA boundaries were redrawn for 2020. Most codes
   kept their five digits and changed their edges; some appeared, some vanished, some
@@ -721,7 +721,7 @@ lines and makes no sound.
   `_merge`. R's [dplyr](https://dplyr.tidyverse.org/reference/mutate-joins.html)
   joins report nothing, so the count has to be built by hand.
 
-The rest of this section is mostly diagnostics. The join is the cheap part.
+The rest of this section is mostly diagnostics.
 
 ### Carrying Social Services forward {#sec-carry-forward}
 
@@ -1482,8 +1482,7 @@ version.
 - [**The NaNDA catalog on openICPSR**]({{< var nanda.catalog_url >}}). Every dataset,
   every geography, free to download. When a NaNDA measure ends up in something you
   publish, cite the dataset itself by its DOI, not just these materials. Each dataset
-  has a ready-made citation on its ICPSR page. That is a condition of the download, and
-  it is how the archive stays funded.
+  has a ready-made citation on its ICPSR page.
 - [**The NaNDA website**]({{< var nanda.url >}}). Documentation, news, and how to reach
   the team.
 - [**Our published merge code**]({{< var crosswalk.merge_code_doi >}}):
