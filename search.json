@@ -35,11 +35,25 @@
     "text": "4 · Four questions to ask every time\n\nWhat identifier do I actually have?\nWhat vintage is it, and what vintage is the file?\nWhat crosswalk, targeting what vintage?\nWhat’s my match rate, and are the unmatched rows different?"
   },
   {
+    "objectID": "slides.html#your-data-nanda-data",
+    "href": "slides.html#your-data-nanda-data",
+    "title": "Linking NaNDA With Your Data",
+    "section": "Your data + NaNDA data",
+    "text": "Your data + NaNDA data\nJoined on one geographic identifier\n\n\nYour data\npeople, outcomes, a ZIP code\n\n+\n\nNaNDA data\nthe places those ZIPs stand for\n\n=\n\nNew ideas\nquestions neither file can answer alone"
+  },
+  {
+    "objectID": "slides.html#questions-neighborhood-data-can-open-up",
+    "href": "slides.html#questions-neighborhood-data-can-open-up",
+    "title": "Linking NaNDA With Your Data",
+    "section": "Questions neighborhood data can open up",
+    "text": "Questions neighborhood data can open up\n\n\n01 Social connection\nDo older adults near more social services report less loneliness?\n\n\n02 Physical activity\nIs park access tied to staying active with age?\n\n\n03 Food security\nDoes neighborhood disadvantage shape who goes without a hot meal?"
+  },
+  {
     "objectID": "slides.html#take-it-with-you",
     "href": "slides.html#take-it-with-you",
     "title": "Linking NaNDA With Your Data",
     "section": "Take it with you",
-    "text": "Take it with you\nhttps://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/\nWalkthrough · data · R · Stata · Python scripts · citable DOI\nQuestions?"
+    "text": "Take it with you\nhttps://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/\nWalkthrough · data · R · Stata · Python scripts · citable DOI\n\nnanda.isr.umich.edu · nanda-admin@umich.edu · @UM_NaNDA · linkedin.com/company/um-nanda\n\nQuestions?"
   },
   {
     "objectID": "index.html",
