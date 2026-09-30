@@ -53,8 +53,6 @@ By the end you will be able to:
 
 ## 0. Setup {#sec-setup}
 
-*{{< var timing.open >}} minutes*
-
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -229,8 +227,6 @@ mydata.head()
 
 ## 1. What identifiers do you actually have? {#sec-identifiers}
 
-*About {{< var timing.identifiers >}} minutes*
-
 Most survey and clinical datasets do not have geography. They have a string: an
 address, a city, a ZIP code, collected for mailing or billing and never checked for the
 job it is now being asked to do. That job is to place each person in a neighborhood
@@ -380,9 +376,6 @@ list, clean noobs
 
 ## 2. If you have addresses: geocoding {#sec-geocoding}
 
-*About {{< var timing.geocoding >}} minutes. Explanation only; the code in this
-notebook stays on the ZIP-to-ZCTA route.*
-
 
 A street address is the most precise location most studies collect, and the least
 usable as it stands. **Geocoding** turns it into a point on the map. A **spatial join**
@@ -444,8 +437,6 @@ join on `zcta10` below. Everything in Section 4 applies unchanged.
 ---
 
 ## 3. ZIP is not ZCTA {#sec-crosswalk}
-
-*About {{< var timing.crosswalk >}} minutes*
 
 A ZIP code is a Postal Service artifact. It names a set of delivery routes. It exists
 to get mail to a door, not to describe a place.
@@ -703,8 +694,6 @@ the NaNDA file, where a second set of reasons can drop rows.
 ---
 
 ## 4. Which boundaries? Joining, and checking the join {#sec-join}
-
-*About {{< var timing.join >}} minutes*
 
 The join is three lines, and nobody gets the three lines wrong. If a column name is
 misspelled the software says so. What people get wrong happens on either side of those
@@ -1426,8 +1415,6 @@ if smf is not None:
 ---
 
 ## 5. Now what? {#sec-nowwhat}
-
-*About {{< var timing.analysis >}} minutes, then questions*
 
 
 Everything above is the how. {{< var session.discussant >}} closes with a few minutes
