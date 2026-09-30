@@ -132,3 +132,78 @@ $presentation-h3-font-size: 1.1em !default;
 
 // No accent bars, no rules under titles, no sidebar stripes. The template's own
 // artwork carries the identity; competing decoration would look like imitation.
+
+// Section 4 (Grace): the two closing slides, rebuilt from Lindsay's
+// gracegsa-slides.pptx in the deck's own palette so the look and the single
+// screen share hold.
+
+// "Your data + NaNDA data = New ideas": three boxes in a row with operators.
+.reveal .flow {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 0.4em;
+}
+.reveal .flow-box {
+  flex: 1 1 0;
+  border: 3px solid $gsa-light-blue;
+  border-radius: 0.4em;
+  padding: 0.6em 0.7em;
+  font-size: 0.7em;
+  line-height: 1.35;
+  text-align: center;
+  p { margin: 0.2em 0; }
+}
+.reveal .flow-result {
+  background: $gsa-dark-blue;
+  border-color: $gsa-dark-blue;
+  color: $gsa-white;
+  strong { color: $gsa-white; }
+}
+.reveal .flow-op {
+  align-self: center;
+  font-size: 1.4em;
+  font-weight: 700;
+  color: $gsa-purple;
+}
+
+// "Questions neighborhood data can open up": three numbered cards.
+.reveal .q-grid {
+  display: flex;
+  gap: 0.6em;
+  margin-top: 0.3em;
+}
+.reveal .q-card {
+  flex: 1 1 0;
+  background: lighten($gsa-light-blue, 42%);
+  border-radius: 0.4em;
+  padding: 0.6em 0.7em 0.7em;
+  font-size: 0.62em;
+  line-height: 1.35;
+  text-align: left;
+  p { margin: 0.3em 0; }
+}
+.reveal .q-num {
+  display: inline-block;
+  font-size: 1.5em;
+  font-weight: 700;
+  color: $gsa-dark-blue;
+  margin-right: 0.3em;
+  vertical-align: middle;
+}
+.reveal .q-label {
+  font-size: 0.75em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $gsa-purple;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+// Contact line on the closing slide.
+.reveal .contact {
+  font-size: 0.55em;
+  color: lighten($gsa-text-gray, 22%);
+  margin: 0.6em 0;
+}

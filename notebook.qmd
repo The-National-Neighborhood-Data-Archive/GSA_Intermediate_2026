@@ -1370,12 +1370,21 @@ if smf is not None:
 
 
 Everything above is the how. {{< var session.discussant >}} closes with a few minutes
-on the why: what a linked file lets you ask that you could not ask before, a few
-concrete examples of questions in aging research that neighborhood measures open up,
-and where to start with NaNDA if one of them is yours. Two cautions come along for the
-ride. A neighborhood measure describes a place, not a person, so be clear when it is
-context and when it is being asked to stand in for exposure. And people in the same
-ZCTA are not independent observations, so the analysis has to account for that.
+on the why. Your data plus NaNDA data, joined on one geographic identifier, is a file
+that can answer questions neither could alone. The three measures we attached today
+each open one:
+
+- **Social connection.** Do older adults near more social services report less
+  loneliness?
+- **Physical activity.** Is park access tied to staying active with age?
+- **Food security.** Does neighborhood disadvantage shape who goes without a hot meal?
+
+None of these is answerable from a survey alone, and none from NaNDA alone. Two cautions
+come along for the ride. A neighborhood measure describes a place, not a person, so be
+clear when it is context and when it is being asked to stand in for exposure. And people
+in the same ZCTA are not independent observations, so the analysis has to account for
+that. If one of these questions is close to yours, NaNDA has the measure and the
+catalogue below is where to start.
 
 
 Everything you saw today is already rendered on this page, so nothing depends on notes

@@ -72,11 +72,75 @@ format:
 
 ---
 
+## Your data + NaNDA data
+
+[Joined on one geographic identifier]{.eyebrow}
+
+:::: {.flow}
+
+::: {.flow-box}
+**Your data**
+
+people, outcomes, a ZIP code
+:::
+
+[+]{.flow-op}
+
+::: {.flow-box}
+**NaNDA data**
+
+the places those ZIPs stand for
+:::
+
+[=]{.flow-op}
+
+::: {.flow-box .flow-result}
+**New ideas**
+
+questions neither file can answer alone
+:::
+
+::::
+
+
+---
+
+## Questions neighborhood data can open up
+
+:::: {.q-grid}
+
+::: {.q-card}
+[01]{.q-num} [Social connection]{.q-label}
+
+Do older adults near more social services report less loneliness?
+:::
+
+::: {.q-card}
+[02]{.q-num} [Physical activity]{.q-label}
+
+Is park access tied to staying active with age?
+:::
+
+::: {.q-card}
+[03]{.q-num} [Food security]{.q-label}
+
+Does neighborhood disadvantage shape who goes without a hot meal?
+:::
+
+::::
+
+
+---
+
 ## Take it with you
 
 [{{< var site.url >}}]{.big-url}
 
 Walkthrough · data · R · Stata · Python scripts · citable DOI
+
+::: {.contact}
+nanda.isr.umich.edu · nanda-admin@umich.edu · @UM_NaNDA · linkedin.com/company/um-nanda
+:::
 
 **Questions?**
 
