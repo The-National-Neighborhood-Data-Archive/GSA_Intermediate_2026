@@ -909,6 +909,11 @@ stretch of years. NaNDA publishes two ZCTA files: 2008–2017 on 2010 boundaries
 row joins the 2010-boundary file.** The 2020-boundary file appears once, below, to show
 what changes if you mix them.
 
+**The limitation, stated as you would in a methods section:** affluence for
+observations from 2018 onward is the 2013–2017 estimate, because NaNDA publishes no
+2010-boundary ZCTA file for later years. Consistent boundaries were traded for
+currency, and the trade is written down.
+
 ::: {.panel-tabset group="language"}
 ### R
 
