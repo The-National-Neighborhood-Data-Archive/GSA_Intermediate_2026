@@ -293,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Robert Melendez runs this code live. Every output is already on this page, so you can read along without installing anything. To run it later, download the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">materials ZIP</a>.</p>
+<p>You don’t have to run this live to follow along. Robert Melendez runs the code on screen, and every output is already on this page. If you want to run it later, the code is in the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">materials ZIP</a>.</p>
 <p><strong>Work in Stata or Python?</strong> Every code block has three tabs. The live session and the rendered output are R. The Stata and Python tabs show the same step in your language. Pick a tab once and the whole page follows.</p>
 </div>
 </div>
@@ -310,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>By the end you will be able to:</p>
 <ul>
 <li><strong>Say which location identifier your data carry</strong>, how complete it is, and what it identifies. <a href="#sec-identifiers">Section 1</a></li>
-<li><strong>Decide whether geocoding addresses is the right route</strong> for your study, and what it costs. <a href="#sec-geocoding">Section 2</a></li>
+<li><strong>Decide whether geocoding addresses is the right route</strong> for your study. <a href="#sec-geocoding">Section 2</a></li>
 <li><strong>Tell a ZIP code from a ZCTA</strong>, and turn one into the other with a crosswalk without losing rows. <a href="#sec-crosswalk">Section 3</a></li>
 <li><strong>Test whether the rows you lost differ from the rows you kept</strong>, before anything from NaNDA is attached. <a href="#sec-who-lost">Who did you lose?</a></li>
 <li><strong>Match the census boundary year</strong> across your codes, the crosswalk, and the NaNDA file, and recognize what goes wrong when they disagree. <a href="#sec-join">Section 4</a>, <a href="#sec-side-by-side">side by side</a></li>
@@ -1101,12 +1101,12 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 <section id="sec-join" class="level2">
 <h2 class="anchored" data-anchor-id="sec-join">4. Which boundaries? Joining, and checking the join</h2>
 <p><em>About 15 minutes</em></p>
-<p>The join is three lines, and nobody gets the three lines wrong. If a column name is misspelled the software says so. What people get wrong happens on either side of those lines and makes no sound.</p>
+<p>The join is three lines, and nobody gets the three lines wrong. If a column name is misspelled the software says so. What people get wrong happens on either side of those lines and can be easily missed.</p>
 <ul>
 <li><strong>Silent error 1: boundaries.</strong> ZCTA boundaries were redrawn for 2020. Most codes kept their five digits and changed their edges; some appeared, some vanished, some were split. A 2010 code joined to a 2020 file usually finds a row, and the row usually describes approximately the same place. Your regression will not carry a footnote saying which cases were approximate.</li>
 <li><strong>Silent error 2: never looking at what fell out.</strong> A left join keeps every row of your data and fills NaNDA’s columns with <code>NA</code> where nothing matched. An inner join drops those rows. Either way the analysis proceeds. Stata’s <code>merge</code> reports <code>_merge</code>. R’s <a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">dplyr</a> joins report nothing, so the count has to be built by hand.</li>
 </ul>
-<p>The rest of this section is mostly diagnostics. The join is the cheap part.</p>
+<p>The rest of this section is mostly diagnostics.</p>
 <section id="sec-carry-forward" class="level3">
 <h3 class="anchored" data-anchor-id="sec-carry-forward">Carrying Social Services forward</h3>
 <p>Social Services ends in 2022; our data runs to 2025. Before joining, we give every ZCTA rows through 2025 and carry its most recent values into them. <strong>That is a decision, not a fix.</strong> The 2023 to 2025 rows will match, and what they match is 2022’s numbers. Write the decision into your methods, because nothing in the output will.</p>
@@ -2065,7 +2065,7 @@ Number of Fisher Scoring iterations: 4</code></pre>
 <section id="where-to-go-next" class="level3">
 <h3 class="anchored" data-anchor-id="where-to-go-next">Where to go next</h3>
 <ul>
-<li><a href="https://www.openicpsr.org/openicpsr/nanda"><strong>The NaNDA catalog on openICPSR</strong></a>. Every dataset, every geography, free to download. When a NaNDA measure ends up in something you publish, cite the dataset itself by its DOI, not just these materials. Each dataset has a ready-made citation on its ICPSR page. That is a condition of the download, and it is how the archive stays funded.</li>
+<li><a href="https://www.openicpsr.org/openicpsr/nanda"><strong>The NaNDA catalog on openICPSR</strong></a>. Every dataset, every geography, free to download. When a NaNDA measure ends up in something you publish, cite the dataset itself by its DOI, not just these materials. Each dataset has a ready-made citation on its ICPSR page.</li>
 <li><a href="https://nanda.isr.umich.edu/"><strong>The NaNDA website</strong></a>. Documentation, news, and how to reach the team.</li>
 <li><a href="https://doi.org/10.3886/E124461V4"><strong>Our published merge code</strong></a>: Chenoweth &amp; Khan, code for merging NaNDA ZCTA-level datasets with the UDS Mapper crosswalk (2024).</li>
 <li><a href="https://web.archive.org/web/20220402144231/https://udsmapper.org/wp-content/uploads/2021/12/ZIPCodetoZCTACrosswalk2019.xlsx"><strong>The crosswalk</strong></a>: UDS Mapper ZIP Code to ZCTA Crosswalk, 2019 release, archived copy.</li>
