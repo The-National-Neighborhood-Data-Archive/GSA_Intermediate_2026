@@ -346,20 +346,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </main> <!-- /main -->
 <!-- Issue #3: Quarto's persistent tabsets add .active to every tabset in the group
      but only update aria-selected and tabindex on the one that was clicked. Keep
-     the ARIA state in step with what is on screen. Loaded via include-after-body. -->
+     the ARIA state in step with what is on screen. Loaded via include-after-body.
+     Quarto syncs the other tabsets after Bootstrap's shown.bs.tab fires, so the
+     sync runs on the next tick, and a MutationObserver catches every later class
+     change (including the restore on page load). -->
 <script>
 (function () {
   function syncTabs() {
     document.querySelectorAll('[role=tablist]').forEach(function (tl) {
       tl.querySelectorAll('[role=tab]').forEach(function (t) {
         var on = t.classList.contains('active');
-        t.setAttribute('aria-selected', on ? 'true' : 'false');
-        t.tabIndex = on ? 0 : -1;
+        if (t.getAttribute('aria-selected') !== String(on)) {
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        }
+        if (t.tabIndex !== (on ? 0 : -1)) t.tabIndex = on ? 0 : -1;
       });
     });
   }
-  document.addEventListener('shown.bs.tab', syncTabs);
-  window.addEventListener('load', syncTabs);
+  function later() { setTimeout(syncTabs, 0); }
+  document.addEventListener('shown.bs.tab', later);
+  window.addEventListener('load', later);
+  var mo = new MutationObserver(function (records) {
+    for (var i = 0; i < records.length; i++) {
+      var el = records[i].target;
+      if (el.getAttribute && el.getAttribute('role') === 'tab') { later(); return; }
+    }
+  });
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'], subtree: true });
 })();
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
