@@ -360,6 +360,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 
 </main> <!-- /main -->
+<!-- Issue #3: Quarto's persistent tabsets add .active to every tabset in the group
+     but only update aria-selected and tabindex on the one that was clicked. Keep
+     the ARIA state in step with what is on screen. Loaded via include-after-body. -->
+<script>
+(function () {
+  function syncTabs() {
+    document.querySelectorAll('[role=tablist]').forEach(function (tl) {
+      tl.querySelectorAll('[role=tab]').forEach(function (t) {
+        var on = t.classList.contains('active');
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+      });
+    });
+  }
+  document.addEventListener('shown.bs.tab', syncTabs);
+  window.addEventListener('load', syncTabs);
+})();
+</script>
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
