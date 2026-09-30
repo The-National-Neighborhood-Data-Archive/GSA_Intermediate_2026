@@ -323,7 +323,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <section id="sec-setup" class="level2">
 <h2 class="anchored" data-anchor-id="sec-setup">0. Setup</h2>
-<p><em>2 minutes</em></p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Stata</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Python</a></li></ul>
 <div class="tab-content" data-group="language">
@@ -503,7 +502,6 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 </section>
 <section id="sec-identifiers" class="level2">
 <h2 class="anchored" data-anchor-id="sec-identifiers">1. What identifiers do you actually have?</h2>
-<p><em>About 6 minutes</em></p>
 <p>Most survey and clinical datasets do not have geography. They have a string: an address, a city, a ZIP code, collected for mailing or billing and never checked for the job it is now being asked to do. That job is to place each person in a neighborhood that another dataset has measured.</p>
 <p>Before any merge, answer three questions about that string:</p>
 <ul>
@@ -745,7 +743,6 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 </section>
 <section id="sec-geocoding" class="level2">
 <h2 class="anchored" data-anchor-id="sec-geocoding">2. If you have addresses: geocoding</h2>
-<p><em>About 4 minutes. Explanation only; the code in this notebook stays on the ZIP-to-ZCTA route.</em></p>
 <p>A street address is the most precise location most studies collect, and the least usable as it stands. <strong>Geocoding</strong> turns it into a point on the map. A <strong>spatial join</strong> then places that point inside a Census tract, and the tract-level NaNDA file joins on the tract code.</p>
 <p>The route, step by step:</p>
 <ol type="1">
@@ -785,7 +782,6 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 </section>
 <section id="sec-crosswalk" class="level2">
 <h2 class="anchored" data-anchor-id="sec-crosswalk">3. ZIP is not ZCTA</h2>
-<p><em>About 10 minutes</em></p>
 <p>A ZIP code is a Postal Service artifact. It names a set of delivery routes. It exists to get mail to a door, not to describe a place.</p>
 <ul>
 <li>Some ZIP codes are a single building.</li>
@@ -1100,7 +1096,6 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 </section>
 <section id="sec-join" class="level2">
 <h2 class="anchored" data-anchor-id="sec-join">4. Which boundaries? Joining, and checking the join</h2>
-<p><em>About 15 minutes</em></p>
 <p>The join is three lines, and nobody gets the three lines wrong. If a column name is misspelled the software says so. What people get wrong happens on either side of those lines and can be easily missed.</p>
 <ul>
 <li><strong>Silent error 1: boundaries.</strong> ZCTA boundaries were redrawn for 2020. Most codes kept their five digits and changed their edges; some appeared, some vanished, some were split. A 2010 code joined to a 2020 file usually finds a row, and the row usually describes approximately the same place. Your regression will not carry a footnote saying which cases were approximate.</li>
@@ -2018,7 +2013,6 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </section>
 <section id="sec-nowwhat" class="level2">
 <h2 class="anchored" data-anchor-id="sec-nowwhat">5. Now what?</h2>
-<p><em>About 4 minutes, then questions</em></p>
 <p>Everything above is the how. Grace Noppert closes with a few minutes on the why. Your data plus NaNDA data, joined on one geographic identifier, is a file that can answer questions neither could alone. The three measures we attached today each open one:</p>
 <ul>
 <li><strong>Social connection.</strong> Do older adults near more social services report less loneliness?</li>
