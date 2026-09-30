@@ -1,6 +1,6 @@
 /*-- scss:defaults --*/
 
-// NaNDA brand for the HTML pages (walkthrough, before-you-join). Tokens from
+// NaNDA brand for the HTML pages (notebook, before-you-begin). Tokens from
 // the NaNDA design system (tokens/colors.css, tokens/typography.css):
 //
 //   Navy      #004a98   headings, links, primary actions, footer
@@ -46,7 +46,7 @@ $link-decoration: underline !default;
 
 $navbar-bg: #ffffff !default;
 $navbar-fg: $nanda-navy !default;
-$navbar-hl: $nanda-sky !default;
+$navbar-hl: $nanda-navy !default;
 
 $footer-bg: $nanda-navy !default;
 $footer-fg: #ffffff !default;
@@ -73,9 +73,14 @@ $border-radius: 4px !default;
   color: $nanda-navy;
   font-weight: 700;
 }
-.navbar .nav-link:hover,
-.navbar .nav-link.active {
+.navbar .nav-link:hover {
   color: $nanda-sky;
+}
+// Active item stays navy (4.5:1 on white) and is marked by an underline.
+.navbar .nav-link.active {
+  color: $nanda-navy;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
 }
 
 // Page title block.
@@ -88,18 +93,19 @@ $border-radius: 4px !default;
   color: $ink-3;
 }
 
-// Headings: h1 sits on a sky-tint band, the brand's section separator.
-h1 {
+// Headings: the page title is the only h1. Section headings (h2) sit on a
+// sky-tint band, the brand's section separator.
+h2:not(.title) {
   background: $nanda-sky-tint;
   padding: 0.5rem 0.9rem;
   border-radius: 4px;
   margin-top: 2.5rem;
 }
-h2 { margin-top: 2rem; }
-h3 { margin-top: 1.4rem; color: $ink-2; }
+h3 { margin-top: 2rem; }
+h4 { margin-top: 1.4rem; color: $ink-2; }
 
-// Section timing line under each h1.
-h1 + p > em {
+// Section timing line under each section heading.
+h2 + p > em {
   color: $ink-3;
   font-style: normal;
   font-size: 0.95rem;

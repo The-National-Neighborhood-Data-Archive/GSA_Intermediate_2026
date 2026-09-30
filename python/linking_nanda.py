@@ -135,8 +135,8 @@ mydata_nanda = (
     .assign(in_nanda=lambda d: d["_merge"].eq("both"))
     .drop(columns="_merge")
     # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year
-    # of a person's records gets the same value. That is an assumption, that
-    # park provision held still across the study period, not a free lunch.
+    # of a person's records gets the same value. That assumes park provision
+    # held still across the study period. Say so in your methods.
     .merge(
         parks2022_zcta10[["ZCTA19", "ANY_OPEN_PARK", "COUNT_OPEN_PARKS_TC10", "PROP_PARK_AREA_ZCTA"]],
         how="left", left_on="zcta10", right_on="ZCTA19",
@@ -146,27 +146,23 @@ mydata_nanda = (
 
 {"rows_before": len(mydata_zcta10), "rows_after": len(mydata_nanda)}
 
-# ---- ses-split ----
-# The two files name the affluence measure differently; give them one name
-# before stacking.
+# ---- ses-join ----
+# The 2010-boundary file (DS0003) names its affluence measure for the ACS years
+# behind it. Give it a plain name before merging. The 2020-boundary file is
+# trimmed the same way here, for the comparison below only.
 ses2010 = ses2008_2017_zcta10[["ZCTA10", "AFFLUENCE13_17"]].rename(
     columns={"ZCTA10": "zcta10", "AFFLUENCE13_17": "AFFLUENCE"})
 ses2020 = ses2018_2022_zcta20[["ZCTA20", "AFFLUENCE"]].rename(columns={"ZCTA20": "zcta10"})
 
-# Note: ZIP codes and ZCTAs can change geographically over time. The 2018-on
-# half joins 2010-vintage codes from the crosswalk to a file drawn on 2020 ZCTAs.
-mydata_nanda = pd.concat([
-    mydata_nanda[mydata_nanda["year"] <= 2017].merge(ses2010, how="left", on="zcta10"),
-    mydata_nanda[mydata_nanda["year"] >= 2018].merge(ses2020, how="left", on="zcta10"),
-], ignore_index=True)
+mydata_nanda = mydata_nanda.merge(ses2010, how="left", on="zcta10")
 
 {"rows": len(mydata_nanda), "with_affluence": mydata_nanda["AFFLUENCE"].notna().sum()}
 
-# ---- vintage-2010 ----
-# Socioeconomic Status, ZCTA 2010 file (ICPSR 38528, DS0003). Its affluence
-# measure is named for the ACS years behind it, so rename it to a common name
-# now: the two files we are comparing call the same construct different things.
-vintage_2010 = mydata_zcta10.merge(
+# ---- boundaries-2010 ----
+# Socioeconomic Status, 2010-boundary file (ICPSR 38528, DS0003), joined to
+# every row. Same rename as above: the two files call the same construct
+# different things.
+on_2010 = mydata_zcta10.merge(
     ses2008_2017_zcta10[["ZCTA10", "AFFLUENCE13_17"]].rename(columns={"AFFLUENCE13_17": "AFFLUENCE"}),
     how="left", left_on="zcta10", right_on="ZCTA10",
 ).drop(columns="ZCTA10")
@@ -179,23 +175,23 @@ def match_summary(df):
         "mean_affluence": round(df["AFFLUENCE"].mean(), 3),
     })
 
-match_summary(vintage_2010)
+match_summary(on_2010)
 
-# ---- vintage-2020 ----
-# The same ZCTA codes, 2010-vintage codes straight from the crosswalk above,
-# against the ZCTA 2020 file (ICPSR 38528, DS0008). Nothing in this join knows
-# that the codes and the geography come from different censuses. It runs, it
-# matches, it returns a number.
-vintage_2020 = mydata_zcta10.merge(
+# ---- boundaries-2020 ----
+# The same 2010-boundary codes, straight from the crosswalk, against the
+# 2020-boundary file (ICPSR 38528, DS0008). Nothing in this join knows that the
+# codes and the boundaries come from different censuses. It runs, it matches,
+# it returns a number.
+on_2020 = mydata_zcta10.merge(
     ses2018_2022_zcta20[["ZCTA20", "AFFLUENCE"]],
     how="left", left_on="zcta10", right_on="ZCTA20",
 ).drop(columns="ZCTA20")
 
-match_summary(vintage_2020)
+match_summary(on_2020)
 
-# ---- vintage-compare ----
+# ---- boundaries-compare ----
 pd.concat(
-    {"SES, ZCTA 2010 file": vintage_2010, "SES, ZCTA 2020 file": vintage_2020},
+    {"SES, ZCTA 2010 file": on_2010, "SES, ZCTA 2020 file": on_2020},
     names=["nanda_file"],
 ).groupby(level="nanda_file").apply(match_summary)
 
@@ -207,16 +203,15 @@ pd.Series({
     "match_rate_pct": round(100 * mydata_nanda["in_nanda"].mean(), 1),
 })
 
-# The same number, by year, which is where it stops being a headline. 2023
-# onward matches because we carried Social Services forward; without that step
-# these rows would show 0%.
+# The same number, by year. 2023 onward matches because we carried Social
+# Services forward; without that step these rows would show 0%.
 (mydata_nanda.groupby("year")["in_nanda"]
    .agg(rows="size", matched="sum", match_rate_pct=lambda s: round(100 * s.mean(), 1))
    .reset_index())
 
 # ---- anti-join ----
-# The rows that found no partner: the complement of the join, and the half
-# nobody looks at. indicator="left_only" is the anti-join.
+# The rows that found no partner: the complement of the join.
+# indicator="left_only" is the anti-join.
 unmatched = (
     mydata_nanda.merge(
         socialservices_zcta10[["zcta10", "year"]].drop_duplicates(),
@@ -229,7 +224,7 @@ unmatched = (
 # A count is not a diagnosis. A row can fail for four different reasons, and
 # the reasons call for different answers: the first two are a data-collection
 # problem, the third is a coverage limit you state in your methods, the fourth
-# is usually a vintage mismatch. Three occur in this file; the third cannot,
+# is usually a boundary mismatch. Three occur in this file; the third cannot,
 # because we carried Social Services forward. It is named so the table says
 # so if that step is ever dropped.
 unmatched.assign(reason=np.select(
@@ -275,4 +270,3 @@ if smf is not None:
 import sys
 print(sys.version)
 print("pandas", pd.__version__, "| numpy", np.__version__)
-

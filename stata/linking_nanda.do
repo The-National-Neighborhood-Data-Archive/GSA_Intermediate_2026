@@ -152,8 +152,8 @@ generate byte in_nanda = (_merge == 3)
 drop _merge
 
 * Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
-* a person's records gets the same value. That is an assumption, that park
-* provision held still across the study period, not a free lunch.
+* a person's records gets the same value. That assumes park provision held
+* still across the study period. Say so in your methods.
 preserve
     use `parks', clear
     keep ZCTA19 ANY_OPEN_PARK COUNT_OPEN_PARKS_TC10 PROP_PARK_AREA_ZCTA
@@ -166,9 +166,10 @@ count
 display "rows before = `rows_before', rows after = " r(N)
 save `mydata_nanda'
 
-* ---- ses-split ----
-* The two files name the affluence measure differently; give them one name
-* before stacking.
+* ---- ses-join ----
+* The 2010-boundary file (DS0003) names its affluence measure for the ACS years
+* behind it. Give it a plain name before merging. The 2020-boundary file is
+* trimmed the same way here, for the comparison below only.
 use `ses2010', clear
 keep ZCTA10 AFFLUENCE13_17
 rename (ZCTA10 AFFLUENCE13_17) (zcta10 AFFLUENCE)
@@ -180,25 +181,14 @@ rename ZCTA20 zcta10
 save `ses2020', replace
 
 use `mydata_nanda', clear
-keep if year <= 2017
 merge m:1 zcta10 using `ses2010', keep(master match) nogenerate
-tempfile le2017
-save `le2017'
-
-* Note: ZIP codes and ZCTAs can change geographically over time. These are
-* 2010-vintage codes from the crosswalk, merged to a file drawn on 2020 ZCTAs.
-use `mydata_nanda', clear
-keep if year >= 2018
-merge m:1 zcta10 using `ses2020', keep(master match) nogenerate
-
-append using `le2017'
 count if !missing(AFFLUENCE)
 display "rows = " _N ", with affluence = " r(N)
 save `mydata_nanda', replace
 
-* ---- vintage-2010 ----
-* Socioeconomic Status, ZCTA 2010 file (ICPSR 38528, DS0003), already trimmed
-* and renamed above, against every row rather than just the rows through 2017.
+* ---- boundaries-2010 ----
+* Socioeconomic Status, 2010-boundary file (ICPSR 38528, DS0003), already
+* trimmed and renamed above, against every row.
 use `mydata_zcta10', clear
 merge m:1 zcta10 using `ses2010', keep(master match) nogenerate
 generate byte matched = !missing(AFFLUENCE)
@@ -209,13 +199,13 @@ local rate = 100 * r(mean)
 summarize AFFLUENCE
 display "SES, ZCTA 2010 file: rows = `rows', matched = `matched', match rate = " ///
         %4.1f `rate' "%, mean affluence = " %6.3f r(mean)
-tempfile vintage_2010
-save `vintage_2010'
+tempfile on_2010
+save `on_2010'
 
-* ---- vintage-2020 ----
-* The same ZCTA codes, 2010-vintage codes straight from the crosswalk above,
-* against the ZCTA 2020 file (ICPSR 38528, DS0008). Nothing in this merge knows
-* that the codes and the geography come from different censuses. It runs, it
+* ---- boundaries-2020 ----
+* The same 2010-boundary codes, straight from the crosswalk, against the
+* 2020-boundary file (ICPSR 38528, DS0008). Nothing in this merge knows that
+* the codes and the boundaries come from different censuses. It runs, it
 * matches, it returns a number.
 use `mydata_zcta10', clear
 merge m:1 zcta10 using `ses2020', keep(master match) nogenerate
@@ -227,13 +217,13 @@ local rate = 100 * r(mean)
 summarize AFFLUENCE
 display "SES, ZCTA 2020 file: rows = `rows', matched = `matched', match rate = " ///
         %4.1f `rate' "%, mean affluence = " %6.3f r(mean)
-tempfile vintage_2020
-save `vintage_2020'
+tempfile on_2020
+save `on_2020'
 
-* ---- vintage-compare ----
-use `vintage_2010', clear
+* ---- boundaries-compare ----
+use `on_2010', clear
 generate str nanda_file = "SES, ZCTA 2010 file"
-append using `vintage_2020'
+append using `on_2020'
 replace nanda_file = "SES, ZCTA 2020 file" if missing(nanda_file)
 generate byte one = 1
 collapse (sum) rows = one (sum) matched (mean) match_rate_pct = matched ///
@@ -248,21 +238,20 @@ use `mydata_nanda', clear
 summarize in_nanda
 display "rows = " r(N) ", matched = " r(sum) ", match rate = " %4.1f 100 * r(mean) "%"
 
-* The same number, by year, which is where it stops being a headline. 2023
-* onward matches because we carried Social Services forward; without that step
-* these rows would show 0%.
+* The same number, by year. 2023 onward matches because we carried Social
+* Services forward; without that step these rows would show 0%.
 tabulate year in_nanda, row nofreq
 
 * ---- anti-join ----
-* The rows that found no partner: the complement of the join, and the half
-* nobody looks at. in_nanda == 0 is exactly the "ours only" side of the merge.
+* The rows that found no partner: the complement of the join. in_nanda == 0 is
+* exactly the "ours only" side of the merge.
 use `mydata_nanda', clear
 keep if in_nanda == 0
 
 * A count is not a diagnosis. A row can fail for four different reasons, and
 * the reasons call for different answers: the first two are a data-collection
 * problem, the third is a coverage limit you state in your methods, the fourth
-* is usually a vintage mismatch. Three occur in this file; the third cannot,
+* is usually a boundary mismatch. Three occur in this file; the third cannot,
 * because we carried Social Services forward. It is named so the table says
 * so if that step is ever dropped.
 generate str reason = "ZCTA not in the NaNDA file"
@@ -295,4 +284,3 @@ logit own_pet hot_meal_days i.count_totindivfamilyservices_6cat i.ANY_OPEN_PARK 
 
 * ---- session-info ----
 about
-

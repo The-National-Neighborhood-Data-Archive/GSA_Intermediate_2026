@@ -1,6 +1,6 @@
 # The NaNDA files: download your own
 
-**You only need these if you want to re-run the code.** The walkthrough page already
+**You only need these if you want to re-run the code.** The notebook page already
 shows every output. Nothing in the session depends on you having them.
 
 NaNDA is distributed through ICPSR, which asks for a free account before it will hand
@@ -25,8 +25,9 @@ are the same.
 | 3 | NaNDA: Socioeconomic Status | <https://doi.org/10.3886/ICPSR38528> | **datasets 3 and 8** (DS0003 and DS0008) |
 
 Datasets 3 and 8 of Socioeconomic Status are both needed, and they are the point of
-Section 3: DS0003 is ZCTA 2010 covering 2008–2017, DS0008 is ZCTA 2020 covering
-2018–2022. The walkthrough joins the same ZCTA codes to both.
+Section 4: DS0003 is drawn on 2010 ZCTA boundaries (2008–2017), DS0008 on 2020 boundaries
+(2018–2022). The notebook joins on the 2010 file and uses the 2020 file once, to
+show what changes when boundaries are mixed.
 
 ICPSR gives you a ZIP per study, with the data nested a few folders deep
 (`ICPSR_38586/DS0002/…`). Unzip it and dig the data file out; you do not need the rest

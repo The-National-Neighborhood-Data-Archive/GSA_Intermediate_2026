@@ -1,5 +1,5 @@
 ---
-title: "Before You Join"
+title: "Before You Begin"
 subtitle: "{{< var session.title >}} · {{< var session.track >}}"
 ---
 
@@ -7,42 +7,45 @@ subtitle: "{{< var session.title >}} · {{< var session.track >}}"
 
 **You do not need to install anything, and you do not need to run any code.**
 
-This session is a guided walkthrough. {{< var session.presenter >}} will write and run
-the code live on screen. Everything he types is already written out, with its output,
-in the [walkthrough]({{< var site.url >}}notebook.html) — so you can read along on a
-second window, or just watch and come back to it afterward.
+This session is a guided read-along. {{< var session.presenter >}} writes and runs the
+code live on screen. Everything he types is already written out, with its output, in
+the [notebook]({{< var site.url >}}notebook.html). Read along in a second window, or
+watch and come back to it afterward.
 
-Running the code yourself during the session is **optional**. If you want to, the setup
-is below. If it doesn't work on the day, let it go and follow along; nothing in the
-session depends on your machine.
+Running the code yourself during the session is **optional**. The setup is below. If
+it does not work on the day, follow along. Nothing in the session depends on your
+machine.
 
 
 ## What you'll get
 
 | | |
 |---|---|
-| Walkthrough (read-along, all outputs shown) | [{{< var site.url >}}notebook.html]({{< var site.url >}}notebook.html) |
-| Everything as a single download | [workshop-materials.zip]({{< var site.zip >}}) |
-| Source and version history | [{{< var site.repo >}}]({{< var site.repo >}}) |
-| Archived + citable | {{< var site.doi >}} |
+| Notebook (read-along, all outputs shown) | [Linking NaNDA With Your Data: notebook]({{< var site.url >}}notebook.html) |
+| Everything as a single download | [Workshop materials (ZIP)]({{< var site.zip >}}) |
+| Source and version history | [GitHub repository]({{< var site.repo >}}) |
+| Archived and citable | {{< var site.doi >}} |
 
-The ZIP contains the synthetic dataset and its codebook, the crosswalk file (the lookup
-table that turns ZIP codes into Census ZCTAs), the walkthrough source with its Stata and
-Python equivalents, and an offline copy of this site.
+The ZIP contains:
 
-**The NaNDA files themselves are not in the ZIP.** NaNDA is distributed through ICPSR,
-which asks for a free account, so we can't pass the files along for you — you download
-your own, which takes about five minutes. The steps are in the optional setup below and
-in `data/nanda/README.md` inside the ZIP. You only need them if you want to run the
-code; every output is already on the [walkthrough]({{< var site.url >}}notebook.html).
+- the synthetic dataset and its codebook
+- the crosswalk file, the lookup table that turns ZIP codes into Census ZCTAs
+- the notebook source, with its Stata and Python equivalents
+- an offline copy of this site
+
+**The NaNDA files themselves are not in the ZIP.** NaNDA is distributed through
+[ICPSR]({{< var nanda.icpsr_url >}}), which asks for a free account, so you download
+your own. It takes about five minutes. The steps are in the optional setup below and
+in `data/nanda/README.md` inside the ZIP. You only need them to run the code; every
+output is already on the [notebook]({{< var site.url >}}notebook.html).
 
 ## If you do want to run along
 
 ::: {.callout-note collapse="true"}
 ## Optional setup (about 10 minutes, do it before the day)
 
-1. **R** (4.3 or newer) — <https://cran.r-project.org/>
-2. **RStudio Desktop** (free) — <https://posit.co/download/rstudio-desktop/>
+1. **R** (4.3 or newer): [cran.r-project.org](https://cran.r-project.org/)
+2. **RStudio Desktop** (free): [posit.co](https://posit.co/download/rstudio-desktop/)
 3. Open RStudio and run:
 
    ```r
@@ -51,17 +54,17 @@ code; every output is already on the [walkthrough]({{< var site.url >}}notebook.
 
    (`readxl`, which reads the crosswalk, installs as part of `tidyverse`.)
 
-4. Download and unzip [workshop-materials.zip]({{< var site.zip >}}).
-5. **Get the NaNDA files from ICPSR.** Sign in at <https://www.icpsr.umich.edu/> with a
-   free account, then download these in **R** format (Stata and delimited versions are
-   on the same pages):
+4. Download and unzip the [workshop materials]({{< var site.zip >}}).
+5. **Get the NaNDA files from ICPSR.** Sign in at
+   [icpsr.umich.edu]({{< var nanda.icpsr_url >}}) with a free account, then download
+   these in **R** format (Stata and delimited versions are on the same pages):
 
-   - **{{< var nanda.social_services_name >}}** — the ZCTA 2010 file.
-     <{{< var nanda.social_services_doi >}}>
-   - **{{< var nanda.parks_name >}}** — dataset 2 (DS0002).
-     <{{< var nanda.parks_doi >}}>
-   - **NaNDA: Socioeconomic Status** — datasets 3 and 8 (DS0003 and DS0008).
-     <https://doi.org/10.3886/ICPSR38528>
+   - [**{{< var nanda.social_services_name >}}**]({{< var nanda.social_services_doi >}}):
+     the ZCTA 2010 file.
+   - [**{{< var nanda.parks_name >}}**]({{< var nanda.parks_doi >}}): dataset 2
+     (DS0002).
+   - [**{{< var nanda.ses_name >}}**]({{< var nanda.ses_doi >}}): datasets 3 and 8
+     (DS0003 and DS0008).
 
    Unzip each one, dig the data file out of the nested folders, and put all four in
    `data/nanda/` inside the unzipped workshop folder. `data/nanda/README.md` has the
@@ -78,22 +81,22 @@ thing step for step and are yours to keep.
 ::: {.callout-important}
 ## If setup doesn't work
 
-Save the troubleshooting for later. The walkthrough page has every output already
-rendered, so nothing you'd see by running the code is missing from it. Follow along on
-screen, and email us afterward: **nanda-admin@umich.edu**.
+Save the troubleshooting for later. The notebook has every output already rendered, so
+nothing you would see by running the code is missing from it. Follow along on screen,
+and email us afterward: [{{< var nanda.contact >}}](mailto:{{< var nanda.contact >}}).
 :::
 
 ## What we assume you already know
 
-You've used R, Stata, or another statistical package to open a dataset and join two
-tables. This is **not** an R lesson. It's about what goes wrong when you link
+You have used R, Stata, or another statistical package to open a dataset and join two
+tables. This is **not** an R lesson. It is about what goes wrong when you link
 individual-level data to neighborhood-level data, and how to catch it, in whichever
 language you use.
 
 ## What's out of scope
 
 Geocoding street addresses to census tracts. The synthetic dataset includes addresses,
-and we'll point at how you'd do it, but it isn't part of this session.
+and Section 2 of the notebook explains the route, but the code stays on ZIP codes.
 
 ## Getting in
 

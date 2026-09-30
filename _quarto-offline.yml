@@ -1,7 +1,7 @@
 # Profile used by make-zip.sh: quarto render --profile offline
 # Renders the pages self-contained so they open from the ZIP with no network.
 # Do NOT add revealjs: embed-resources here; it breaks the project render
-# (Quarto 1.7 tries to move index.html twice). The slides stay on the site.
+# (Quarto 1.7 tries to move index.html twice).
 project:
   output-dir: _offline
 

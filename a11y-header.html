@@ -1,0 +1,64 @@
+<!-- Accessibility and header fixes shared by every page (issues #4, #5, #7 in the
+     private repo). Loaded through include-in-header in _quarto.yml. -->
+<style>
+  .skip-link {
+    position: absolute; left: -999px; top: 0;
+    background: #004A98; color: #fff; padding: .5rem 1rem; z-index: 2000;
+  }
+  .skip-link:focus { left: 1rem; top: 1rem; }
+  a:focus-visible, button:focus-visible,
+  .nav-link:focus-visible, .code-copy-button:focus-visible {
+    outline: 3px solid #004A98; outline-offset: 2px; box-shadow: none;
+  }
+  .table-responsive { overflow-x: auto; }
+  .navbar-title { white-space: normal; }
+  .navbar-brand-text { color: #004A98; font-weight: 700; }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Skip link: first Tab stop on every page.
+    var a = document.createElement('a');
+    a.className = 'skip-link';
+    a.href = '#quarto-document-content';
+    a.textContent = 'Skip to content';
+    document.body.prepend(a);
+
+    // Tables scroll inside their own box instead of widening the page.
+    document.querySelectorAll('table').forEach(function (table) {
+      if (table.parentNode.classList.contains('table-responsive')) return;
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-responsive';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    // Accessible names on the buttons Quarto generates.
+    document.querySelectorAll('.code-copy-button').forEach(function (btn) {
+      btn.setAttribute('aria-label', 'Copy code');
+    });
+    var searchBtn = document.querySelector('#quarto-search a, .aa-DetachedSearchButton');
+    if (searchBtn && !searchBtn.getAttribute('aria-label')) {
+      searchBtn.setAttribute('aria-label', 'Search');
+    }
+
+    // Site title: only "NaNDA" is a link (to the NaNDA site). The logo beside it
+    // already links there; the pages are one click away in the navbar.
+    var brand = document.querySelector('.navbar-brand:not(.navbar-brand-logo) .navbar-title');
+    if (brand) {
+      var link = brand.closest('a');
+      var text = brand.textContent;
+      var parts = text.split('NaNDA');
+      if (link && parts.length === 2) {
+        var span = document.createElement('span');
+        span.className = 'navbar-brand navbar-brand-text';
+        span.append(document.createTextNode(parts[0]));
+        var n = document.createElement('a');
+        n.href = 'https://nanda.isr.umich.edu/';
+        n.textContent = 'NaNDA';
+        span.append(n);
+        span.append(document.createTextNode(parts[1]));
+        link.replaceWith(span);
+      }
+    }
+  });
+</script>

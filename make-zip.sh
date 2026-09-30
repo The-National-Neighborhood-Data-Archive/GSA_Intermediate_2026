@@ -3,7 +3,7 @@
 # Run AFTER `quarto render`, BEFORE `quarto publish gh-pages`.
 #
 # The script refuses to build a ZIP a participant couldn't use:
-#   - every data file the walkthrough reads must be in data/
+#   - every data file the notebook reads must be in data/
 #   - the Stata and Python scripts must be present
 #   - the site URLs in _variables.yml must name the repo this is running in
 #     (the private working repo and the public participant repo have different names)
@@ -123,22 +123,22 @@ cat > "$STAGE/$OUT/README.txt" << INNER
 Linking NaNDA With Your Data
 GSA 2026 Annual Scientific Meeting — Breakout 2 (Intermediate)
 
-You do not need to run any of this. The full walkthrough, with every output
+You do not need to run any of this. The full notebook, with every output
 already rendered, is at:
 
   https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/
 
 What's in here:
-  site/      the walkthrough and the before-you-join page, saved for offline
+  site/      the notebook and the before-you-begin page, saved for offline
              reading. Open site/notebook.html in any browser; no internet needed.
   data/      synthetic dataset, its codebook, and the ZIP-to-ZCTA crosswalk.
              The NaNDA files are NOT in here — they come from ICPSR, which
              needs a free account. data/nanda/README.md has the three
              downloads and where to put them. You only need them if you want
-             to re-run the code; the walkthrough already shows every output.
-  stata/     the Stata version of the walkthrough, step for step
-  python/    the Python version of the walkthrough, step for step
-  notebook.qmd   the walkthrough source (R, with the same Stata and Python
+             to re-run the code; the notebook already shows every output.
+  stata/     the Stata version of the notebook, step for step
+  python/    the Python version of the notebook, step for step
+  notebook.qmd   the notebook source (R, with the same Stata and Python
                  steps shown one tab away on the web page). Open workshop.Rproj
                  in RStudio and press Render to run it yourself.
 

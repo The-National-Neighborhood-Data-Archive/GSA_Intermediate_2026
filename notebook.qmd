@@ -1,7 +1,10 @@
 ---
 title: "Linking NaNDA With Your Data"
-subtitle: "A walkthrough · {{< var session.date >}}"
-author: "{{< var session.presenter >}} and {{< var session.facilitator >}}"
+subtitle: "Read-along notebook · {{< var session.date >}}"
+author:
+  - name: "{{< var session.presenter >}}"
+  - name: "{{< var session.facilitator >}}"
+    url: "https://github.com/w-clary"
 format:
   html:
     toc: true
@@ -11,26 +14,26 @@ format:
 
 
 ::: {.callout-tip}
-## You don't need to run this
+### You don't need to run this
 
-{{< var session.presenter >}} is running this code live. Every output below is already
-rendered, so you can read along without installing anything. If you'd like to run it
-yourself later, everything is in the [materials ZIP]({{< var site.zip >}}).
+{{< var session.presenter >}} runs this code live. Every output is already on this
+page, so you can read along without installing anything. To run it later, download the
+[materials ZIP]({{< var site.zip >}}).
 
 **Work in Stata or Python?** Every code block has three tabs. The live session and the
-rendered output are R; the Stata and Python tabs show the same step in your language.
+rendered output are R. The Stata and Python tabs show the same step in your language.
 Pick a tab once and the whole page follows.
 :::
 
 ---
 
-# 0. Setup {#sec-setup}
+## 0. Setup {#sec-setup}
 
-*Before we start — {{< var timing.open >}} minutes*
+*{{< var timing.open >}} minutes*
 
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: setup
@@ -42,7 +45,7 @@ library(here)        # file paths that work wherever this folder sits on your ma
 library(janitor)     # tabyl(), for frequency tables you can read
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * Run this from the workshop folder (the one holding workshop.Rproj), so the
@@ -56,7 +59,7 @@ set more off
 tempfile mydata socialservices parks ses2010 ses2020 xwalk mydata_zcta10 mydata_nanda
 ```
 
-## Python
+### Python
 
 ```{.python}
 import pandas as pd            # data frames, read_csv / read_stata / merge
@@ -70,7 +73,7 @@ DATA = ROOT / "data"
 :::
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: read-data
@@ -90,8 +93,8 @@ socialservices_zcta10 <- read_csv(
 )
 
 # Parks and Socioeconomic Status come from ICPSR as .rda files. load() drops an
-# object into your session under a name ICPSR picked, and returns that name — so
-# print it, then rename to something you'll recognise three screens from now.
+# object into your session under a name ICPSR picked, and returns that name.
+# Print it, then rename it to something you will recognise later.
 print(load(here("data", "nanda", "38586-0002-Data.rda")))
 parks2022_zcta10 <- da38586.0002
 rm(da38586.0002)
@@ -105,7 +108,7 @@ ses2018_2022_zcta20 <- da38528.0008
 rm(da38528.0008)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * Our own data. Stata guesses "number" for a column of digits, and 03042 comes
@@ -139,7 +142,7 @@ if _rc tostring ZCTA20, replace format(%05.0f)
 save `ses2020'
 ```
 
-## Python
+### Python
 
 ```{.python}
 # Our own data. `zip` is a label, not a quantity: say so, or pandas guesses
@@ -165,15 +168,15 @@ ses2018_2022_zcta20 = zcta_text(pd.read_stata(DATA / "nanda" / "38528-0008-Data.
 :::
 
 ::: {.callout-warning}
-## Read ZIP codes as text, always
+### Read ZIP codes as text, always
 
-ZIP codes are labels, not quantities: read them as numbers and `03042` becomes `3042`,
-nothing warns you, and every join for that row fails. In practice that is all of New
-England, New Jersey, and Puerto Rico quietly dropping out of your analysis.
+ZIP codes are labels, not quantities. Read them as numbers and `03042` becomes `3042`,
+nothing warns you, and every join for that row fails. That is all of New England, New
+Jersey, and Puerto Rico dropping out of your analysis.
 :::
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: glimpse-data
@@ -181,7 +184,7 @@ England, New Jersey, and Puerto Rico quietly dropping out of your analysis.
 glimpse(mydata)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 use `mydata', clear
@@ -189,7 +192,7 @@ describe
 list in 1/5
 ```
 
-## Python
+### Python
 
 ```{.python}
 mydata.info()
@@ -200,30 +203,27 @@ mydata.head()
 
 ---
 
-# 1. What identifiers do you actually have? {#sec-identifiers}
+## 1. What identifiers do you actually have? {#sec-identifiers}
 
-*About {{< var timing.sec1 >}} minutes*
+*About {{< var timing.identifiers >}} minutes*
 
 Most survey and clinical datasets do not have geography. They have a string: an
 address, a city, a ZIP code, collected for mailing or billing and never checked for the
-second job it is now being asked to do.
+job it is now being asked to do. That job is to place each person in a neighborhood
+that another dataset has measured.
 
-That job is to place each person in a neighborhood that some other dataset has
-measured. Whether the string can do it depends on two things: the unit the other
-dataset is published at, and what it takes to get from what you have to that unit.
+Before any merge, answer three questions about that string:
 
-So the question before any merge is not "does my data have location?" It is: which
-identifier do I actually have, how complete is it, and what is it an identifier *of*? A
-ZIP code is not a place in the way a Census tract is a place, and an address is not an
-identifier at all until something turns it into one.
+- **Which identifier do I have?** An address, a ZIP code, a Census code?
+- **How complete is it?** Rows with nothing to look up never match.
+- **What is it an identifier of?** A ZIP code is a mail route, not a place. An
+  address is not an identifier until something turns it into one.
 
-If your data already carry Census tract or ZCTA codes (ZIP Code Tabulation Areas, the
-Census Bureau's version of ZIP codes) from an earlier geocoding step, you are ahead,
-but not exempt. Those codes have a vintage, meaning the census year whose boundaries
-they follow, and the vintage question in Section 3 applies with full force.
+If your data already carry Census tract or ZCTA codes from an earlier geocoding step,
+you are ahead but not exempt. Those codes follow the **boundaries** of one census
+year, and the boundary question in Section 4 applies to them too.
 
-
-## What's in the synthetic dataset
+### What's in the synthetic dataset
 
 | Variable | Type | Notes |
 |---|---|---|
@@ -235,29 +235,32 @@ they follow, and the vintage question in Section 3 applies with full force.
 | `loneliness` | continuous | |
 | `own_pet` | 0/1 | |
 
-## What NaNDA is published at
+### What NaNDA is published at
 
-NaNDA describes neighborhoods, not people. Every measure is a count, a density, or a
-rate for a geographic unit in a given year. There are no individual records anywhere in
-the archive, which is why the linking is on you: NaNDA cannot know where your
-participants live.
+[NaNDA]({{< var nanda.url >}}) describes neighborhoods, not people. Every measure is a
+count, a density, or a rate for a geographic unit in a given year. There are no
+individual records in the archive, so the linking is on you. NaNDA cannot know where
+your participants live.
 
-Today we use two datasets:
+Today we use three datasets from the [NaNDA catalog on ICPSR]({{< var nanda.catalog_url >}}):
 
-- **{{< var nanda.social_services_name >}}** ({{< var nanda.social_services_years >}}),
-  <{{< var nanda.social_services_doi >}}>
-- **{{< var nanda.parks_name >}}** ({{< var nanda.parks_years >}}),
-  <{{< var nanda.parks_doi >}}>
+- [**{{< var nanda.social_services_name >}}**]({{< var nanda.social_services_doi >}})
+  ({{< var nanda.social_services_years >}})
+- [**{{< var nanda.parks_name >}}**]({{< var nanda.parks_doi >}})
+  ({{< var nanda.parks_years >}})
+- [**{{< var nanda.ses_name >}}**]({{< var nanda.ses_doi >}}) (2008–2022, two files)
 
-Both are released at the Census tract and the ZCTA level. We use the ZCTA files, because
-that is the closest thing to what the synthetic data can offer.
+All three are released at the Census tract level and the
+[ZCTA]({{< var geocoding.zcta_definition_url >}}) level. We use the ZCTA files, because
+ZIP codes are what the synthetic data can offer. **Every file we join to is drawn on
+2010 boundaries.** {{< var session.presenter >}} explains that choice in the session,
+and Section 4 shows what changes when you mix boundary years.
 
-Which is the point to sit with: our file has ZIP codes, and NaNDA has ZCTAs. They look
-alike, five digits and usually the same five digits, and they are not the same thing.
-The next section is about that gap.
+Our file has ZIP codes and NaNDA has ZCTAs. They look alike, usually the same five
+digits, and they are not the same thing. Section 3 is about that gap.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: inspect-identifiers
@@ -272,7 +275,7 @@ mydata %>%
   )
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * How many rows carry a ZIP we can actually look something up with?
@@ -282,7 +285,7 @@ summarize missing_zip
 display "rows = " r(N) ", missing ZIP = " r(sum) ", pct missing = " %4.1f 100 * r(mean)
 ```
 
-## Python
+### Python
 
 ```{.python}
 # How many rows carry a ZIP we can actually look something up with?
@@ -298,7 +301,7 @@ pd.Series({
 
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: inspect-address
@@ -315,7 +318,7 @@ mydata %>%
   arrange(desc(n))
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * address, city and zip are each incomplete, and not for the same rows. A row
@@ -330,7 +333,7 @@ gsort -n
 list, clean noobs
 ```
 
-## Python
+### Python
 
 ```{.python}
 # address, city and zip are each incomplete, and not for the same rows. A row
@@ -349,58 +352,112 @@ list, clean noobs
 :::
 
 
-::: {.callout-note}
-## Aside: what if you have addresses?
+---
 
-Street addresses are a different workflow, and we are not doing it today. You would
-geocode each address to coordinates, assign those coordinates to a Census tract, and use
-the tract-level NaNDA file, with failure modes of its own: addresses that will not
-parse, rooftop versus street-segment precision, and tract boundaries that also moved in
-2020. The Census Bureau's batch geocoder (<https://geocoding.geo.census.gov/>) is free,
-needs no API key, and returns the tract code directly, which skips the spatial join
-entirely. If your data have addresses, that tool plus Section 3 is most of what you
-need.
-:::
+## 2. If you have addresses: geocoding {#sec-geocoding}
+
+*About {{< var timing.geocoding >}} minutes. Explanation only; the code in this
+notebook stays on the ZIP-to-ZCTA route.*
+
+
+A street address is the most precise location most studies collect, and the least
+usable as it stands. **Geocoding** turns it into a point on the map. A **spatial join**
+then places that point inside a Census tract, and the tract-level NaNDA file joins on
+the tract code.
+
+The route, step by step:
+
+1. **Geocode.** Send each address to a geocoding service and get back coordinates plus
+   a precision code. The [Census Bureau's geocoder]({{< var geocoding.census_geocoder_url >}})
+   is free and returns the tract directly. [tidygeocoder]({{< var geocoding.tidygeocoder_url >}})
+   in R talks to OpenStreetMap, ArcGIS, Google, and others through one interface.
+2. **Check precision.** A rooftop match and a "somewhere in this city" match both come
+   back with coordinates. Keep the tract only where the match is precise enough to
+   trust. With OpenStreetMap, that is the
+   [place rank]({{< var geocoding.nominatim_rank_url >}}).
+3. **Spatial join to 2010 tracts.** Download the TIGER/Line tract boundaries for the
+   census year your NaNDA file uses and intersect the points with them.
+4. **Join to the tract-level NaNDA file** on the tract code, then run the same
+   diagnostics as Section 4.
+
+Why we are not doing it live:
+
+- **It is slow and it costs.** Free services throttle to about one address per second.
+  Paid ones charge per thousand addresses.
+- **It is a terms-of-service question.** Some services restrict storing or sharing the
+  results, so a geocoded file may not be shareable even when the addresses are.
+- **It fails differently.** Addresses that will not parse, apartment-level ambiguity,
+  and PO boxes all produce a coordinate or nothing, and the failure never looks like a
+  join error.
+
+The shape of it in R, using OpenStreetMap:
+
+```{.r}
+library(tidygeocoder)   # one interface to many geocoding services
+library(tigris)         # Census boundary files
+library(sf)             # spatial joins
+
+mydata_geocoded <- mydata %>%
+  geocode(street = address, city = city, state = state, postalcode = zip,
+          method = "osm", full_results = TRUE)
+
+# Keep a tract only where the match is precise enough (OSM place_rank >= 26).
+points <- mydata_geocoded %>%
+  filter(!is.na(lat)) %>%
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+tracts2010 <- tracts(state = unique(mydata$state), cb = FALSE, year = 2010)
+points <- st_transform(points, st_crs(tracts2010))
+
+mydata_tract10 <- st_join(points, tracts2010, join = st_intersects) %>%
+  mutate(tract_fips10 = if_else(place_rank >= 26, GEOID10, NA_character_)) %>%
+  st_drop_geometry()
+```
+
+From here the tract-level NaNDA files join on `tract_fips10` exactly as the ZCTA files
+join on `zcta10` below. Everything in Section 4 applies unchanged.
 
 ---
 
-# 2. ZIP is not ZCTA {#sec-crosswalk}
+## 3. ZIP is not ZCTA {#sec-crosswalk}
 
-*About {{< var timing.sec2 >}} minutes*
+*About {{< var timing.crosswalk >}} minutes*
 
-A ZIP code is a Postal Service artifact. It names a set of delivery routes, and it
-exists to get mail to a door, not to describe a place. Some ZIP codes are a single
-building. Some are a bank of post office boxes with no residents at all. Some cross
-county and even state lines, and the Postal Service redraws them whenever the mail
-requires, without telling anyone doing research.
+A ZIP code is a Postal Service artifact. It names a set of delivery routes. It exists
+to get mail to a door, not to describe a place.
 
-A ZCTA, a ZIP Code Tabulation Area, is the Census Bureau's answer to the fact that
-researchers use ZIP codes anyway. For each decennial census, the Bureau takes every
-census block, looks at the ZIP code most of its addresses carry, and assigns the block
-to that ZIP's ZCTA. The result is a set of areas with the same five-digit names as ZIP
-codes that tile the country and can be mapped, measured, and published at. NaNDA's ZCTA
-files are built on these.
+- Some ZIP codes are a single building.
+- Some are a bank of post office boxes with no residents.
+- Some cross county and state lines.
+- The Postal Service redraws them whenever the mail requires, without telling anyone
+  doing research.
 
-Most of the time a ZIP code and the ZCTA of the same name cover roughly the same people.
-"Most of the time" is doing a lot of work in that sentence. ZIP codes with no ZCTA, such
-as post office boxes and single-site ZIPs, have nowhere to go. ZIPs whose deliveries were
-mostly absorbed into a neighboring ZCTA are assigned there, under a different number. So
-the step from ZIP to ZCTA is a lookup against a crosswalk, not a rename of the column.
-And the crosswalk has a vintage of its own.
+A [ZCTA]({{< var geocoding.zcta_definition_url >}}), a ZIP Code Tabulation Area, is the
+Census Bureau's answer to the fact that researchers use ZIP codes anyway. For each
+decennial census, the Bureau assigns every census block to the ZIP code most of its
+addresses carry. The result is a set of areas with the same five-digit names as ZIP
+codes that tile the country and can be measured. NaNDA's ZCTA files are built on these.
 
-## The crosswalk we're using
+Most of the time a ZIP code and the ZCTA of the same name cover roughly the same
+people. **Most of the time.** ZIP codes with no ZCTA, such as post office boxes and
+single-site ZIPs, have nowhere to go. ZIPs mostly absorbed into a neighboring ZCTA are
+assigned there, under a different number. So the step from ZIP to ZCTA is a lookup
+against a crosswalk, not a rename of the column. And the crosswalk follows the
+boundaries of one census year, like everything else.
 
-- **{{< var crosswalk.primary_name >}}** ({{< var crosswalk.primary_year >}}) —
-  <{{< var crosswalk.primary_url >}}>
-- NaNDA's own merge code: {{< var crosswalk.merge_code_name >}}
-  ({{< var crosswalk.merge_code_year >}}), {{< var crosswalk.merge_code_doi >}}
+### The crosswalk we're using
 
-Use NaNDA's published merge code rather than a snippet copied from a slide: it is
-citable, it is maintained, and when something needs fixing the fix lands in one place
-you can find again.
+- [**{{< var crosswalk.primary_name >}}**]({{< var crosswalk.primary_url >}})
+  ({{< var crosswalk.primary_year >}} release, archived copy). Included in the ZIP as
+  `data/zip_to_zcta_2019.xlsx`.
+- [**NaNDA's published merge code**]({{< var crosswalk.merge_code_doi >}}):
+  {{< var crosswalk.merge_code_name >}} ({{< var crosswalk.merge_code_year >}}).
+
+Use the published merge code rather than a snippet copied from a screen. It is
+citable, it is maintained, and a fix lands in one place you can find again.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: read-crosswalk
@@ -421,7 +478,7 @@ zipzctaxwalk2019 <- read_excel(
 tabyl(zipzctaxwalk2019, zip_join_type)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * Every column as text, for the same reason as `zip` above. Then pad back to
@@ -438,7 +495,7 @@ save `xwalk'
 tabulate zip_join_type
 ```
 
-## Python
+### Python
 
 ```{.python}
 # Every column as text, for the same reason as `zip` above. Then pad back to
@@ -456,7 +513,7 @@ zipzctaxwalk2019["zip_join_type"].value_counts(dropna=False)
 :::
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: crosswalk-join
@@ -485,7 +542,7 @@ mydata_zcta10 %>%
   tabyl(zcta_status)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 use `xwalk', clear
@@ -514,7 +571,7 @@ drop _merge
 save `mydata_zcta10'
 ```
 
-## Python
+### Python
 
 ```{.python}
 mydata_zcta10 = (
@@ -544,53 +601,48 @@ mydata_zcta10.assign(zcta_status=np.select(
 :::
 
 ::: {.callout-important}
-## Which ZCTA vintage does your crosswalk target?
+### Which ZCTA boundaries does your crosswalk produce?
 
-The {{< var crosswalk.primary_year >}} release of the {{< var crosswalk.primary_name >}}
-targets **{{< var crosswalk.primary_zcta_vintage >}} ZCTAs**. That makes it the right
-partner for the 2010-vintage NaNDA file and the wrong one for the 2020-vintage file. In
-the next section we join to both anyway, on purpose, because nothing in the code will
-tell you which of the two joins was mismatched. When you do this with your own data,
-read the crosswalk's documentation for its target vintage before you read anything else.
-
-
+The {{< var crosswalk.primary_year >}} release of the
+[{{< var crosswalk.primary_name >}}]({{< var crosswalk.primary_url >}}) produces
+**{{< var crosswalk.primary_zcta_boundaries >}}-boundary ZCTAs**. That makes it the
+right partner for NaNDA's 2010-boundary files, which is what we use throughout. With
+your own data, read the crosswalk's documentation for its target boundaries before
+anything else.
 :::
 
 ---
 
-# 3. Which vintage? Joining, and checking the join {#sec-join}
+## 4. Which boundaries? Joining, and checking the join {#sec-join}
 
-*About {{< var timing.sec3 >}} minutes — **this is the section that matters***
+*About {{< var timing.join >}} minutes*
 
-The join is three lines. Nobody gets the three lines wrong. The software sees to that,
-and if a column name is misspelled it says so. What people get wrong happens on either
-side of those lines and makes no sound at all.
+The join is three lines, and nobody gets the three lines wrong. If a column name is
+misspelled the software says so. What people get wrong happens on either side of those
+lines and makes no sound.
 
-The first silent error is vintage. ZCTA boundaries were redrawn for 2020. Most codes
-survived with the same five digits and slightly different edges; some appeared, some
-vanished, some were split. A 2020 code joined against a 2010 file will usually find a
-row, and the row will usually describe approximately the same place. Approximately.
-Your regression will not carry a footnote saying which cases were approximate.
+- **Silent error 1: boundaries.** ZCTA boundaries were redrawn for 2020. Most codes
+  kept their five digits and changed their edges; some appeared, some vanished, some
+  were split. A 2010 code joined to a 2020 file usually finds a row, and the row
+  usually describes approximately the same place. Your regression will not carry a
+  footnote saying which cases were approximate.
+- **Silent error 2: never looking at what fell out.** A left join keeps every row of
+  your data and fills NaNDA's columns with `NA` where nothing matched. An inner join
+  drops those rows. Either way the analysis proceeds. Stata's `merge` reports
+  `_merge`. R's [dplyr](https://dplyr.tidyverse.org/reference/mutate-joins.html)
+  joins report nothing, so the count has to be built by hand.
 
-The second silent error is never looking at what fell out. A left join keeps every row
-of your data and fills NaNDA's columns with `NA` where nothing matched. An inner join
-drops those rows. Either way the analysis proceeds, and unless you count, you will not
-know how many people you lost or who they were. Stata's `merge` at least hands you
-`_merge` and reports it. R's join functions (from the dplyr package) report nothing, so
-the counting has to be built in by hand.
+The rest of this section is mostly diagnostics. The join is the cheap part.
 
-The rest of this section is therefore mostly diagnostics, and that is the point. The
-join is the cheap part.
-
-## Carrying Social Services forward
+### Carrying Social Services forward
 
 Social Services ends in 2022; our data runs to 2025. Before joining, we give every ZCTA
-rows through 2025 and carry its most recent values into them. That is a decision, not a
-fix: the 2023 to 2025 rows will match, and what they match is 2022's numbers. Write the
-decision down in your methods, because nothing in the output will.
+rows through 2025 and carry its most recent values into them. **That is a decision, not
+a fix.** The 2023 to 2025 rows will match, and what they match is 2022's numbers. Write
+the decision into your methods, because nothing in the output will.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: carry-forward
@@ -598,7 +650,7 @@ decision down in your methods, because nothing in the output will.
 # complete() adds the missing ZCTA-year rows; fill() carries each ZCTA's last
 # value down into them. fill() does not stop at 2022: any value missing inside
 # 1990-2022 (population, and the densities where population is zero) also gets
-# the year before. Know that it happens.
+# the year before.
 socialservices_zcta10 <- socialservices_zcta10 %>%
   complete(zcta10, year = 1990:2025) %>%
   arrange(zcta10, year) %>%
@@ -610,7 +662,7 @@ socialservices_zcta10 <- socialservices_zcta10 %>%
 tabyl(socialservices_zcta10, year) %>% filter(year >= 2020)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * Stata has no complete(); every ZCTA here has a 2022 row, so make three copies
@@ -632,7 +684,7 @@ save `socialservices', replace
 tabulate year if year >= 2020
 ```
 
-## Python
+### Python
 
 ```{.python}
 # pandas has no complete(); every ZCTA here has a 2022 row, so copy it to
@@ -654,10 +706,10 @@ socialservices_zcta10.loc[socialservices_zcta10["year"] >= 2020, "year"].value_c
 
 :::
 
-## The join
+### The join
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: join-nanda
@@ -679,8 +731,8 @@ mydata_nanda <- mydata_zcta10 %>%
   ) %>%
   mutate(in_nanda = coalesce(in_nanda, FALSE)) %>%
   # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
-  # a person's records gets the same value. That is an assumption — that park
-  # provision held still across the study period — not a free lunch.
+  # a person's records gets the same value. That assumes park provision held
+  # still across the study period. Say so in your methods.
   left_join(
     parks2022_zcta10 %>%
       select(ZCTA19, ANY_OPEN_PARK, COUNT_OPEN_PARKS_TC10, PROP_PARK_AREA_ZCTA),
@@ -690,7 +742,7 @@ mydata_nanda <- mydata_zcta10 %>%
 c(rows_before = nrow(mydata_zcta10), rows_after = nrow(mydata_nanda))
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 use `socialservices', clear
@@ -712,8 +764,8 @@ generate byte in_nanda = (_merge == 3)
 drop _merge
 
 * Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
-* a person's records gets the same value. That is an assumption, that park
-* provision held still across the study period, not a free lunch.
+* a person's records gets the same value. That assumes park provision held
+* still across the study period. Say so in your methods.
 preserve
     use `parks', clear
     keep ZCTA19 ANY_OPEN_PARK COUNT_OPEN_PARKS_TC10 PROP_PARK_AREA_ZCTA
@@ -727,7 +779,7 @@ display "rows before = `rows_before', rows after = " r(N)
 save `mydata_nanda'
 ```
 
-## Python
+### Python
 
 ```{.python}
 # Social Services is longitudinal, so the key is ZCTA *and* year.
@@ -746,8 +798,8 @@ mydata_nanda = (
     .assign(in_nanda=lambda d: d["_merge"].eq("both"))
     .drop(columns="_merge")
     # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year
-    # of a person's records gets the same value. That is an assumption, that
-    # park provision held still across the study period, not a free lunch.
+    # of a person's records gets the same value. That assumes park provision
+    # held still across the study period. Say so in your methods.
     .merge(
         parks2022_zcta10[["ZCTA19", "ANY_OPEN_PARK", "COUNT_OPEN_PARKS_TC10", "PROP_PARK_AREA_ZCTA"]],
         how="left", left_on="zcta10", right_on="ZCTA19",
@@ -760,24 +812,23 @@ mydata_nanda = (
 
 :::
 
-## Socioeconomic status: two files, split by year
+### Socioeconomic status, on 2010 boundaries
 
 NaNDA's SES measures are five-year ACS estimates, so each file's value stands for a
-stretch of years. We split our rows at 2018. Rows through 2017 join the 2008–2017 file,
-published at 2010 ZCTAs. Rows from 2018 on join the 2018–2022 file, published at 2020
-ZCTAs, and carry its values forward through 2025. Then the two halves are stacked back
-into one dataset.
+stretch of years. NaNDA publishes two ZCTA files: 2008–2017 on 2010 boundaries and
+2018–2022 on 2020 boundaries. Our crosswalk produces 2010-boundary codes, so **every
+row joins the 2010-boundary file.** The 2020-boundary file appears once, below, to show
+what changes if you mix them.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
-#| label: ses-split
+#| label: ses-join
 
-# The two files name the affluence measure differently; give them one name
-# before stacking.
-mydata_nanda_le2017 <- mydata_nanda %>%
-  filter(year <= 2017) %>%
+# The 2010-boundary file (DS0003) names its affluence measure for the ACS years
+# behind it. Give it a plain name before joining.
+mydata_nanda <- mydata_nanda %>%
   left_join(
     ses2008_2017_zcta10 %>%
       select(ZCTA10, AFFLUENCE13_17) %>%
@@ -785,25 +836,15 @@ mydata_nanda_le2017 <- mydata_nanda %>%
     by = c("zcta10" = "ZCTA10")
   )
 
-# Note: ZIP codes and ZCTAs can change geographically over time. These are
-# 2010-vintage codes from the crosswalk, joined to a file drawn on 2020 ZCTAs.
-mydata_nanda_ge2018 <- mydata_nanda %>%
-  filter(year >= 2018) %>%
-  left_join(
-    ses2018_2022_zcta20 %>% select(ZCTA20, AFFLUENCE),
-    by = c("zcta10" = "ZCTA20")
-  )
-
-mydata_nanda <- bind_rows(mydata_nanda_le2017, mydata_nanda_ge2018)
-
 c(rows = nrow(mydata_nanda), with_affluence = sum(!is.na(mydata_nanda$AFFLUENCE)))
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
-* The two files name the affluence measure differently; give them one name
-* before stacking.
+* The 2010-boundary file (DS0003) names its affluence measure for the ACS years
+* behind it. Give it a plain name before merging. The 2020-boundary file is
+* trimmed the same way here, for the comparison below only.
 use `ses2010', clear
 keep ZCTA10 AFFLUENCE13_17
 rename (ZCTA10 AFFLUENCE13_17) (zcta10 AFFLUENCE)
@@ -815,67 +856,49 @@ rename ZCTA20 zcta10
 save `ses2020', replace
 
 use `mydata_nanda', clear
-keep if year <= 2017
 merge m:1 zcta10 using `ses2010', keep(master match) nogenerate
-tempfile le2017
-save `le2017'
-
-* Note: ZIP codes and ZCTAs can change geographically over time. These are
-* 2010-vintage codes from the crosswalk, merged to a file drawn on 2020 ZCTAs.
-use `mydata_nanda', clear
-keep if year >= 2018
-merge m:1 zcta10 using `ses2020', keep(master match) nogenerate
-
-append using `le2017'
 count if !missing(AFFLUENCE)
 display "rows = " _N ", with affluence = " r(N)
 save `mydata_nanda', replace
 ```
 
-## Python
+### Python
 
 ```{.python}
-# The two files name the affluence measure differently; give them one name
-# before stacking.
+# The 2010-boundary file (DS0003) names its affluence measure for the ACS years
+# behind it. Give it a plain name before merging. The 2020-boundary file is
+# trimmed the same way here, for the comparison below only.
 ses2010 = ses2008_2017_zcta10[["ZCTA10", "AFFLUENCE13_17"]].rename(
     columns={"ZCTA10": "zcta10", "AFFLUENCE13_17": "AFFLUENCE"})
 ses2020 = ses2018_2022_zcta20[["ZCTA20", "AFFLUENCE"]].rename(columns={"ZCTA20": "zcta10"})
 
-# Note: ZIP codes and ZCTAs can change geographically over time. The 2018-on
-# half joins 2010-vintage codes from the crosswalk to a file drawn on 2020 ZCTAs.
-mydata_nanda = pd.concat([
-    mydata_nanda[mydata_nanda["year"] <= 2017].merge(ses2010, how="left", on="zcta10"),
-    mydata_nanda[mydata_nanda["year"] >= 2018].merge(ses2020, how="left", on="zcta10"),
-], ignore_index=True)
+mydata_nanda = mydata_nanda.merge(ses2010, how="left", on="zcta10")
 
 {"rows": len(mydata_nanda), "with_affluence": mydata_nanda["AFFLUENCE"].notna().sum()}
 ```
 
 :::
 
-## 2010 vs 2020 ZCTAs, side by side
+### 2010 vs 2020 boundaries, side by side
 
-The note in that code is doing real work. The crosswalk gave us 2010 ZCTA codes, and
-from 2018 on we joined them to a file drawn on 2020 ZCTAs. To see what that costs,
-take the stack apart. What follows is not a demonstration of a mistake. It is the same
-join run twice, against the 2010-vintage NaNDA file and the 2020-vintage file, using the
-same crosswalked ZCTA codes, across every row. Both runs succeed. Both match the same rows, at the same rate, because most ZCTAs
-kept their five digits from one census to the next. What differs is the value each run
-attaches to those rows: the same people get a different mean affluence depending on
-which file was open. Nothing in either output identifies which run paired codes with
-the geography they were drawn for. That can only be answered from outside the code, by
-knowing what vintage each input carries.
+The same join, run twice with the same crosswalked codes: once against the
+2010-boundary SES file and once against the 2020-boundary file. Both runs succeed.
+Both match the same rows at the same rate, because most ZCTAs kept their five digits
+from one census to the next. **What differs is the value attached to each row.** The
+same people get a different mean affluence depending on which file was open. Nothing
+in either output says which run paired the codes with the boundaries they were drawn
+for. Only you can know that, from the documentation of each input.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
-#| label: vintage-2010
+#| label: boundaries-2010
 
-# Socioeconomic Status, ZCTA 2010 file (ICPSR 38528, DS0003). Its affluence
-# measure is named for the ACS years behind it, so rename it to a common name
-# now — the two files we are comparing call the same construct different things.
-vintage_2010 <- mydata_zcta10 %>%
+# Socioeconomic Status, 2010-boundary file (ICPSR 38528, DS0003), joined to
+# every row. Same rename as above: the two files call the same construct
+# different things.
+on_2010 <- mydata_zcta10 %>%
   left_join(
     ses2008_2017_zcta10 %>%
       select(ZCTA10, AFFLUENCE13_17) %>%
@@ -883,7 +906,7 @@ vintage_2010 <- mydata_zcta10 %>%
     by = c("zcta10" = "ZCTA10")
   )
 
-vintage_2010 %>%
+on_2010 %>%
   summarise(
     rows           = n(),
     matched        = sum(!is.na(AFFLUENCE)),
@@ -892,11 +915,11 @@ vintage_2010 %>%
   )
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
-* Socioeconomic Status, ZCTA 2010 file (ICPSR 38528, DS0003), already trimmed
-* and renamed above, against every row rather than just the rows through 2017.
+* Socioeconomic Status, 2010-boundary file (ICPSR 38528, DS0003), already
+* trimmed and renamed above, against every row.
 use `mydata_zcta10', clear
 merge m:1 zcta10 using `ses2010', keep(master match) nogenerate
 generate byte matched = !missing(AFFLUENCE)
@@ -907,17 +930,17 @@ local rate = 100 * r(mean)
 summarize AFFLUENCE
 display "SES, ZCTA 2010 file: rows = `rows', matched = `matched', match rate = " ///
         %4.1f `rate' "%, mean affluence = " %6.3f r(mean)
-tempfile vintage_2010
-save `vintage_2010'
+tempfile on_2010
+save `on_2010'
 ```
 
-## Python
+### Python
 
 ```{.python}
-# Socioeconomic Status, ZCTA 2010 file (ICPSR 38528, DS0003). Its affluence
-# measure is named for the ACS years behind it, so rename it to a common name
-# now: the two files we are comparing call the same construct different things.
-vintage_2010 = mydata_zcta10.merge(
+# Socioeconomic Status, 2010-boundary file (ICPSR 38528, DS0003), joined to
+# every row. Same rename as above: the two files call the same construct
+# different things.
+on_2010 = mydata_zcta10.merge(
     ses2008_2017_zcta10[["ZCTA10", "AFFLUENCE13_17"]].rename(columns={"AFFLUENCE13_17": "AFFLUENCE"}),
     how="left", left_on="zcta10", right_on="ZCTA10",
 ).drop(columns="ZCTA10")
@@ -930,28 +953,28 @@ def match_summary(df):
         "mean_affluence": round(df["AFFLUENCE"].mean(), 3),
     })
 
-match_summary(vintage_2010)
+match_summary(on_2010)
 ```
 
 :::
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
-#| label: vintage-2020
+#| label: boundaries-2020
 
-# The same ZCTA codes — 2010-vintage codes, straight from the crosswalk above —
-# against the ZCTA 2020 file (ICPSR 38528, DS0008). Nothing in this join knows
-# that the codes and the geography come from different censuses. It runs, it
-# matches, it returns a number.
-vintage_2020 <- mydata_zcta10 %>%
+# The same 2010-boundary codes, straight from the crosswalk, against the
+# 2020-boundary file (ICPSR 38528, DS0008). Nothing in this join knows that the
+# codes and the boundaries come from different censuses. It runs, it matches,
+# it returns a number.
+on_2020 <- mydata_zcta10 %>%
   left_join(
     ses2018_2022_zcta20 %>% select(ZCTA20, AFFLUENCE),
     by = c("zcta10" = "ZCTA20")
   )
 
-vintage_2020 %>%
+on_2020 %>%
   summarise(
     rows           = n(),
     matched        = sum(!is.na(AFFLUENCE)),
@@ -960,12 +983,12 @@ vintage_2020 %>%
   )
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
-* The same ZCTA codes, 2010-vintage codes straight from the crosswalk above,
-* against the ZCTA 2020 file (ICPSR 38528, DS0008). Nothing in this merge knows
-* that the codes and the geography come from different censuses. It runs, it
+* The same 2010-boundary codes, straight from the crosswalk, against the
+* 2020-boundary file (ICPSR 38528, DS0008). Nothing in this merge knows that
+* the codes and the boundaries come from different censuses. It runs, it
 * matches, it returns a number.
 use `mydata_zcta10', clear
 merge m:1 zcta10 using `ses2020', keep(master match) nogenerate
@@ -977,36 +1000,36 @@ local rate = 100 * r(mean)
 summarize AFFLUENCE
 display "SES, ZCTA 2020 file: rows = `rows', matched = `matched', match rate = " ///
         %4.1f `rate' "%, mean affluence = " %6.3f r(mean)
-tempfile vintage_2020
-save `vintage_2020'
+tempfile on_2020
+save `on_2020'
 ```
 
-## Python
+### Python
 
 ```{.python}
-# The same ZCTA codes, 2010-vintage codes straight from the crosswalk above,
-# against the ZCTA 2020 file (ICPSR 38528, DS0008). Nothing in this join knows
-# that the codes and the geography come from different censuses. It runs, it
-# matches, it returns a number.
-vintage_2020 = mydata_zcta10.merge(
+# The same 2010-boundary codes, straight from the crosswalk, against the
+# 2020-boundary file (ICPSR 38528, DS0008). Nothing in this join knows that the
+# codes and the boundaries come from different censuses. It runs, it matches,
+# it returns a number.
+on_2020 = mydata_zcta10.merge(
     ses2018_2022_zcta20[["ZCTA20", "AFFLUENCE"]],
     how="left", left_on="zcta10", right_on="ZCTA20",
 ).drop(columns="ZCTA20")
 
-match_summary(vintage_2020)
+match_summary(on_2020)
 ```
 
 :::
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
-#| label: vintage-compare
+#| label: boundaries-compare
 
 bind_rows(
-  `SES, ZCTA 2010 file` = vintage_2010,
-  `SES, ZCTA 2020 file` = vintage_2020,
+  `SES, ZCTA 2010 file` = on_2010,
+  `SES, ZCTA 2020 file` = on_2020,
   .id = "nanda_file"
 ) %>%
   group_by(nanda_file) %>%
@@ -1019,12 +1042,12 @@ bind_rows(
   )
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
-use `vintage_2010', clear
+use `on_2010', clear
 generate str nanda_file = "SES, ZCTA 2010 file"
-append using `vintage_2020'
+append using `on_2020'
 replace nanda_file = "SES, ZCTA 2020 file" if missing(nanda_file)
 generate byte one = 1
 collapse (sum) rows = one (sum) matched (mean) match_rate_pct = matched ///
@@ -1034,55 +1057,51 @@ replace mean_affluence = round(mean_affluence, 0.001)
 list, clean noobs
 ```
 
-## Python
+### Python
 
 ```{.python}
 pd.concat(
-    {"SES, ZCTA 2010 file": vintage_2010, "SES, ZCTA 2020 file": vintage_2020},
+    {"SES, ZCTA 2010 file": on_2010, "SES, ZCTA 2020 file": on_2020},
     names=["nanda_file"],
 ).groupby(level="nanda_file").apply(match_summary)
 ```
 
 :::
 
-Read the table twice. The match rate is identical in both rows, so a match rate alone
-would never have told you anything was wrong. The mean moved. That is the shape of a
-vintage error: not a missing row you can count, but a plausible number attached to the
-wrong place.
+Read the table twice. **The match rate is identical in both rows**, so a match rate
+alone would never have told you anything was wrong. **The mean moved.** That is the
+shape of a boundary error: not a missing row you can count, but a plausible number
+attached to the wrong place.
 
 ::: {.callout-warning}
-## Pick your vintage from your data, not from the file that happens to be open
+### Match the boundaries, and say which ones you matched
 
-The year your participants were observed decides the vintage, not the file that happens
-to be open. Observations through 2019 belong with 2010 geographies; from 2020 on, with
-2020 geographies. Our synthetic file spans {{< var synthetic.years >}}, so it straddles
-that boundary and also runs past the last year either NaNDA dataset covers. That is why
-the SES step above split the file by observation year and joined each part to its own
-file, and why Social Services was carried forward from its last available year with the
-decision written down. The one thing that split did not do is convert the codes: the
-2018-on half still carries 2010 ZCTA codes into a 2020 file. For a real analysis you
-would run those rows through a 2020-target crosswalk first.
+Every code in a join follows the boundaries of one census year: the codes in your
+file, the codes the crosswalk produces, and the codes the NaNDA file is drawn on.
+**All three have to agree.** Ours agree on 2010. If your data run past 2019 and you
+want 2020 boundaries instead, use a crosswalk that produces 2020 codes and the
+2020-boundary NaNDA files, and state the choice in your methods. What you cannot do
+is let the file that happens to be open decide.
 :::
 
-## Who did you lose?
+### Who did you lose?
 
-A match rate is a headline, not a diagnostic. The headline above tells you the size of
-the loss and nothing about its shape. The diagnostic is whether the rows that
-did not match differ from the rows that did.
+A match rate is a headline, not a diagnostic. It tells you the size of the loss and
+nothing about its shape. The diagnostic is whether the rows that did not match differ
+from the rows that did.
 
 In this file about {{< var synthetic.zip_missing_pct >}} of rows have no ZIP at all. If
-those rows are disproportionately rural, or older, or in worse health, the matched sample
-is no longer the sample you drew, and every neighborhood coefficient you estimate is
-conditional on having a mailable address. That is a selection problem, and it does not
-announce itself.
+those rows are disproportionately rural, older, or in worse health, the matched sample
+is no longer the sample you drew. Every neighborhood coefficient you estimate is then
+conditional on having a mailable address. **That is a selection problem, and it does
+not announce itself.**
 
-Neither language will do this for you. dplyr's joins are silent. Stata's `_merge`
-reports the count, not the composition. The comparison has to be made deliberately:
-isolate the unmatched rows, and put their means beside the matched rows' means on the
-variables you actually care about.
+Neither language does this for you. dplyr's joins are silent, and Stata's `_merge`
+reports the count, not the composition. Isolate the unmatched rows and put their means
+beside the matched rows' means on the variables the study is about.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: match-rate
@@ -1095,9 +1114,8 @@ mydata_nanda %>%
     match_rate_pct = round(100 * mean(in_nanda), 1)
   )
 
-# The same number, by year, which is where it stops being a headline. 2023
-# onward matches because we carried Social Services forward; without that step
-# these rows would show 0%.
+# The same number, by year. 2023 onward matches because we carried Social
+# Services forward; without that step these rows would show 0%.
 mydata_nanda %>%
   group_by(year) %>%
   summarise(
@@ -1108,7 +1126,7 @@ mydata_nanda %>%
   )
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * The headline.
@@ -1116,13 +1134,12 @@ use `mydata_nanda', clear
 summarize in_nanda
 display "rows = " r(N) ", matched = " r(sum) ", match rate = " %4.1f 100 * r(mean) "%"
 
-* The same number, by year, which is where it stops being a headline. 2023
-* onward matches because we carried Social Services forward; without that step
-* these rows would show 0%.
+* The same number, by year. 2023 onward matches because we carried Social
+* Services forward; without that step these rows would show 0%.
 tabulate year in_nanda, row nofreq
 ```
 
-## Python
+### Python
 
 ```{.python}
 # The headline.
@@ -1132,9 +1149,8 @@ pd.Series({
     "match_rate_pct": round(100 * mydata_nanda["in_nanda"].mean(), 1),
 })
 
-# The same number, by year, which is where it stops being a headline. 2023
-# onward matches because we carried Social Services forward; without that step
-# these rows would show 0%.
+# The same number, by year. 2023 onward matches because we carried Social
+# Services forward; without that step these rows would show 0%.
 (mydata_nanda.groupby("year")["in_nanda"]
    .agg(rows="size", matched="sum", match_rate_pct=lambda s: round(100 * s.mean(), 1))
    .reset_index())
@@ -1143,13 +1159,13 @@ pd.Series({
 :::
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: anti-join
 
-# anti_join() keeps the rows of the left table that found no partner — the
-# complement of the join, and the half nobody looks at.
+# anti_join() keeps the rows of the left table that found no partner: the
+# complement of the join.
 unmatched <- mydata_nanda %>%
   anti_join(
     socialservices_zcta10 %>% select(zcta10, year),
@@ -1159,7 +1175,7 @@ unmatched <- mydata_nanda %>%
 # A count is not a diagnosis. A row can fail for four different reasons, and
 # the reasons call for different answers: the first two are a data-collection
 # problem, the third is a coverage limit you state in your methods, the fourth
-# is usually a vintage mismatch. Three occur in this file; the third cannot,
+# is usually a boundary mismatch. Three occur in this file; the third cannot,
 # because we carried Social Services forward. It is named so the table says
 # so if that step is ever dropped.
 unmatched %>%
@@ -1172,18 +1188,18 @@ unmatched %>%
   tabyl(reason)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
-* The rows that found no partner: the complement of the join, and the half
-* nobody looks at. in_nanda == 0 is exactly the "ours only" side of the merge.
+* The rows that found no partner: the complement of the join. in_nanda == 0 is
+* exactly the "ours only" side of the merge.
 use `mydata_nanda', clear
 keep if in_nanda == 0
 
 * A count is not a diagnosis. A row can fail for four different reasons, and
 * the reasons call for different answers: the first two are a data-collection
 * problem, the third is a coverage limit you state in your methods, the fourth
-* is usually a vintage mismatch. Three occur in this file; the third cannot,
+* is usually a boundary mismatch. Three occur in this file; the third cannot,
 * because we carried Social Services forward. It is named so the table says
 * so if that step is ever dropped.
 generate str reason = "ZCTA not in the NaNDA file"
@@ -1193,11 +1209,11 @@ replace  reason = "no ZIP to start from"       if missing(zip)
 tabulate reason
 ```
 
-## Python
+### Python
 
 ```{.python}
-# The rows that found no partner: the complement of the join, and the half
-# nobody looks at. indicator="left_only" is the anti-join.
+# The rows that found no partner: the complement of the join.
+# indicator="left_only" is the anti-join.
 unmatched = (
     mydata_nanda.merge(
         socialservices_zcta10[["zcta10", "year"]].drop_duplicates(),
@@ -1210,7 +1226,7 @@ unmatched = (
 # A count is not a diagnosis. A row can fail for four different reasons, and
 # the reasons call for different answers: the first two are a data-collection
 # problem, the third is a coverage limit you state in your methods, the fourth
-# is usually a vintage mismatch. Three occur in this file; the third cannot,
+# is usually a boundary mismatch. Three occur in this file; the third cannot,
 # because we carried Social Services forward. It is named so the table says
 # so if that step is ever dropped.
 unmatched.assign(reason=np.select(
@@ -1222,19 +1238,22 @@ unmatched.assign(reason=np.select(
 
 :::
 
-Three reasons appear, and they call for different responses. No ZIP is the big one and
-a data-collection problem; nothing downstream fixes it. The other two turn up twice
-each. A ZIP the crosswalk does not know is a typo or a ZIP newer than the crosswalk; a
-ZCTA the NaNDA file does not carry usually means the two were built on different
-vintages. At two rows apiece they vanish inside a match rate, and in real data they are
-the ones telling you something upstream is misaligned. That is why the table lists
-reasons, not just a count. The fourth reason, year past coverage, is absent only because
-we carried Social Services forward. Had we not, 407 rows would sit in that line, and
-the honest description of them is the same either way: a limit of the NaNDA file,
-handled by a decision you state in your methods.
+Three reasons appear, and they call for different responses:
+
+- **No ZIP** is the big one and a data-collection problem. Nothing downstream fixes it.
+- **ZIP not in the crosswalk** is a typo or a ZIP newer than the crosswalk.
+- **ZCTA not in the NaNDA file** usually means the two were drawn on different
+  boundaries.
+
+At two rows apiece the last two vanish inside a match rate. In real data they are the
+rows telling you something upstream is misaligned, which is why the table lists
+reasons and not just a count. The fourth reason, **year past coverage**, is absent only
+because we carried Social Services forward. Without that step, 407 rows would sit in
+that line. Either way it is a limit of the NaNDA file, handled by a decision you state
+in your methods.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: who-is-missing
@@ -1252,7 +1271,7 @@ mydata_nanda %>%
   )
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 * The question a match rate cannot answer: are the people who fell out different
@@ -1261,7 +1280,7 @@ use `mydata_nanda', clear
 tabstat loneliness physical_activity own_pet, by(in_nanda) statistics(n mean) format(%9.3f)
 ```
 
-## Python
+### Python
 
 ```{.python}
 # The question a match rate cannot answer: are the people who fell out different
@@ -1277,16 +1296,15 @@ tabstat loneliness physical_activity own_pet, by(in_nanda) statistics(n mean) fo
 
 :::
 
-## A toy model, to show the join was for something
+### A toy model, to show the join was for something
 
 One model, not an analysis: does owning a pet go with the neighborhood measures we
 just attached? The service count is cut into bins so the coefficients read as
-comparisons against ZCTAs with none. Note the number of rows the model actually uses.
-Every unmatched row drops out here, silently, which is what the diagnostics above were
-for.
+comparisons against ZCTAs with none. **Note the number of rows the model uses.** Every
+unmatched row drops out here, silently. That is what the diagnostics above were for.
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: toy-model
@@ -1306,7 +1324,7 @@ own_pet_model <- glm(
 summary(own_pet_model)
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 use `mydata_nanda', clear
@@ -1325,7 +1343,7 @@ label values count_totindivfamilyservices_6cat svc6
 logit own_pet hot_meal_days i.count_totindivfamilyservices_6cat i.ANY_OPEN_PARK AFFLUENCE
 ```
 
-## Python
+### Python
 
 ```{.python}
 mydata_nanda["count_totindivfamilyservices_6cat"] = pd.cut(
@@ -1353,20 +1371,21 @@ if smf is not None:
 :::
 
 ::: {.callout-tip}
-## The four questions
+### Four questions to ask before every link
 
-1. What identifier do I actually have?
-2. What vintage is it, and what vintage is the file?
-3. What crosswalk, targeting what vintage?
-4. What's my match rate, and are the unmatched rows different?
-
+1. **What location information do my data contain?** An address, a ZIP code, a Census
+   code?
+2. **Which census year's boundaries do my codes follow,** and which does the NaNDA
+   file follow?
+3. **Which crosswalk did I use,** and which boundaries does it produce?
+4. **How many rows matched,** and do the unmatched rows look different from the rest?
 :::
 
 ---
 
-# 4. Now what? {#sec-nowwhat}
+## 5. Now what? {#sec-nowwhat}
 
-*About {{< var timing.sec4 >}} minutes, then questions*
+*About {{< var timing.analysis >}} minutes, then questions*
 
 
 Everything above is the how. {{< var session.discussant >}} closes with a few minutes
@@ -1379,58 +1398,66 @@ each open one:
 - **Physical activity.** Is park access tied to staying active with age?
 - **Food security.** Does neighborhood disadvantage shape who goes without a hot meal?
 
-None of these is answerable from a survey alone, and none from NaNDA alone. Two cautions
-come along for the ride. A neighborhood measure describes a place, not a person, so be
-clear when it is context and when it is being asked to stand in for exposure. And people
-in the same ZCTA are not independent observations, so the analysis has to account for
-that. If one of these questions is close to yours, NaNDA has the measure and the
-catalogue below is where to start.
+None of these is answerable from a survey alone, and none from NaNDA alone. Two
+cautions:
+
+- **A neighborhood measure describes a place, not a person.** Be clear when it is
+  context and when it is standing in for exposure.
+- **People in the same ZCTA are not independent observations.** The analysis has to
+  account for that.
+
+If one of these questions is close to yours, NaNDA has the measure and the
+[catalog]({{< var nanda.catalog_url >}}) is where to start.
 
 
 Everything you saw today is already rendered on this page, so nothing depends on notes
-taken during the session. The materials ZIP holds the synthetic data and its codebook,
-the crosswalk, this walkthrough as a runnable `notebook.qmd`, the Stata and Python
-equivalents in `stata/` and `python/`, and an offline copy of this page. The scripts
-follow the same steps under the same section numbers, so you can read them beside this
-walkthrough.
+taken during the session. The [materials ZIP]({{< var site.zip >}}) holds:
 
-The NaNDA files are the one thing not in the ZIP. They come from ICPSR, which asks for a
-free account, so you download your own — about five minutes, and `data/nanda/README.md`
-in the ZIP walks you through it. That is only needed if you want to re-run the code.
-If you use these materials in teaching or in a paper, cite them by the DOI below; it
-always resolves to the latest version.
+- the synthetic data and its codebook
+- the crosswalk
+- this notebook as a runnable `notebook.qmd`, and the Stata and Python versions in
+  `stata/` and `python/`, under the same section numbers
+- an offline copy of this page
 
-## Take this with you
+The NaNDA files are the one thing not in the ZIP. They come from
+[ICPSR]({{< var nanda.icpsr_url >}}), which asks for a free account, so you download
+your own. It takes about five minutes, and `data/nanda/README.md` in the ZIP walks you
+through it. You only need them to re-run the code. If you use these materials in
+teaching or in a paper, cite them by the DOI below. It always resolves to the latest
+version.
+
+### Take this with you
 
 | | |
 |---|---|
-| This walkthrough | [{{< var site.url >}}notebook.html]({{< var site.url >}}notebook.html) |
-| Everything, zipped | [{{< var site.zip >}}]({{< var site.zip >}}) |
-| Source | [{{< var site.repo >}}]({{< var site.repo >}}) |
+| This notebook | [Linking NaNDA With Your Data: notebook]({{< var site.url >}}notebook.html) |
+| Everything, zipped | [Workshop materials (ZIP)]({{< var site.zip >}}) |
+| Source | [GitHub repository]({{< var site.repo >}}) |
 | Cite it | {{< var site.doi >}} |
 
-## Where to go next
+### Where to go next
 
-- **The NaNDA catalogue on openICPSR**, <https://www.openicpsr.org/openicpsr/nanda>.
-  Every dataset, every geography, free to download. When a NaNDA measure ends up in
-  something you publish, cite the dataset itself by its DOI (each one has a ready-made
-  citation on its ICPSR page), not just these materials: that is a condition of the
-  download, and it is how the archive stays funded.
-- **The NaNDA website**, <https://nanda.isr.umich.edu/>. Documentation, news, and how to
-  reach the team.
-- **Our published merge code**: {{< var crosswalk.merge_code_name >}}
-  ({{< var crosswalk.merge_code_year >}}), <{{< var crosswalk.merge_code_doi >}}>.
-- **The crosswalk**: {{< var crosswalk.primary_name >}},
-  <{{< var crosswalk.primary_url >}}>.
-- **Questions after today**: <nanda-admin@umich.edu>
+- [**The NaNDA catalog on openICPSR**]({{< var nanda.catalog_url >}}). Every dataset,
+  every geography, free to download. When a NaNDA measure ends up in something you
+  publish, cite the dataset itself by its DOI, not just these materials. Each dataset
+  has a ready-made citation on its ICPSR page. That is a condition of the download, and
+  it is how the archive stays funded.
+- [**The NaNDA website**]({{< var nanda.url >}}). Documentation, news, and how to reach
+  the team.
+- [**Our published merge code**]({{< var crosswalk.merge_code_doi >}}):
+  {{< var crosswalk.merge_code_name >}} ({{< var crosswalk.merge_code_year >}}).
+- [**The crosswalk**]({{< var crosswalk.primary_url >}}):
+  {{< var crosswalk.primary_name >}}, {{< var crosswalk.primary_year >}} release,
+  archived copy.
+- **Questions after today**: [{{< var nanda.contact >}}](mailto:{{< var nanda.contact >}})
 
 
 ---
 
-## Session information {.appendix}
+### Session information {.appendix}
 
 ::: {.panel-tabset group="language"}
-## R
+### R
 
 ```{r}
 #| label: session-info
@@ -1438,13 +1465,13 @@ always resolves to the latest version.
 sessionInfo()
 ```
 
-## Stata
+### Stata
 
 ```{.stata}
 about
 ```
 
-## Python
+### Python
 
 ```{.python}
 import sys

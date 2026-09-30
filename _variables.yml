@@ -1,27 +1,29 @@
-# Single source of truth for anything that appears in BOTH slides.qmd and
-# notebook.qmd. Reference in prose as {{< var session.date >}} etc.
+# Single source of truth for names, dates, DOIs, URLs, and timings used in
+# index.qmd and notebook.qmd. Reference in prose as {{< var session.date >}} etc.
 # If you find yourself typing a dataset name or DOI twice, put it here instead.
 
 session:
   title: "Linking NaNDA With Your Data"
   track: "Breakout 2 — Intermediate"
-  date: "October 10, 2026"
+  date: "October 7, 2026"
   length: "45 minutes"
   platform: "Zoom"
   facilitator: "Will Clary"
+  facilitator_url: "https://github.com/w-clary"
   presenter: "Robert Melendez"
   discussant: "Grace Noppert"
   start_time: "per the GSA program"   # not rendered anywhere; GSA never confirmed a clock time
 
 # Timings live here and nowhere else. The section headers in notebook.qmd read from
-# these, so a schedule change happens in one place. Section 3 is the payoff and is
-# never cut; sections 1, 2, and 4 are sized to leave real slack.
+# these, so a schedule change happens in one place. The join section is the payoff
+# and is never cut; the others are sized to leave real slack.
 timing:
   open: 2            # framing
-  sec1: 8            # identifiers
-  sec2: 12           # ZIP to ZCTA
-  sec3: 15           # vintage + diagnostics — do not cut this one
-  sec4: 4            # analysis + implications
+  identifiers: 6     # section 1
+  geocoding: 4       # section 2, Robert's explanation; no live code
+  crosswalk: 10      # section 3, ZIP to ZCTA
+  join: 15           # section 4, boundaries + diagnostics — do not cut this one
+  analysis: 4        # section 5, Grace
   close: 1           # URL, thanks
   slack: 3
   total: 45
@@ -34,31 +36,34 @@ site:
   doi: "DOI assigned at the v1.0.0 release (Zenodo); until then, cite the repository URL"   # replace with the DOI once Zenodo mints it, then re-render
 
 nanda:
+  url: "https://nanda.isr.umich.edu/"
+  catalog_url: "https://www.openicpsr.org/openicpsr/nanda"
+  icpsr_url: "https://www.icpsr.umich.edu/"
+  contact: "nanda-admin@umich.edu"
   social_services_name: "NaNDA: Social Services"
   social_services_doi: "https://doi.org/10.3886/ICPSR208207.V5"
   social_services_years: "1990–2022"
   parks_name: "NaNDA: Parks"
   parks_doi: "https://doi.org/10.3886/ICPSR38586"
   parks_years: "2018, 2022"
+  ses_name: "NaNDA: Socioeconomic Status"
+  ses_doi: "https://doi.org/10.3886/ICPSR38528"
   geography: "ZCTA (every NaNDA dataset released to date also ships a ZCTA version)"
 
 crosswalk:
   primary_name: "UDS Mapper ZIP Code to ZCTA Crosswalk"
   primary_url: "https://web.archive.org/web/20220402144231/https://udsmapper.org/wp-content/uploads/2021/12/ZIPCodetoZCTACrosswalk2019.xlsx"
   primary_year: "2019"
-  primary_zcta_vintage: "2010"    # matches data/zip_to_zcta_2019.xlsx, which Robert's code reads
+  primary_zcta_boundaries: "2010"    # matches data/zip_to_zcta_2019.xlsx, which Robert's code reads
   merge_code_name: "Chenoweth & Khan, code for merging NaNDA ZCTA-level datasets with the UDS Mapper crosswalk"
   merge_code_doi: "https://doi.org/10.3886/E124461V4"
   merge_code_year: "2024"
 
-# Lifted from GSA2026_PPT_Template.pptx. Used by gsa-theme.scss.
-gsa:
-  font: "Arial"
-  dark_blue: "#16478E"
-  light_blue: "#288BE4"
-  purple: "#5F6DBB"
-  text_gray: "#3B3838"
-  template_note: "Body copy is gray, never 100% black. No colors outside this list."
+geocoding:
+  census_geocoder_url: "https://geocoding.geo.census.gov/"
+  tidygeocoder_url: "https://jessecambon.github.io/tidygeocoder/"
+  nominatim_rank_url: "https://nominatim.org/release-docs/latest/customize/Ranking/#address-rank"
+  zcta_definition_url: "https://www.census.gov/programs-surveys/geography/guidance/geo-areas/zctas.html"
 
 synthetic:
   file: "synthetic_data_v20260924.csv"

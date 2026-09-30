@@ -4,7 +4,6 @@ project:
   render:
     - index.qmd
     - notebook.qmd
-    - slides.qmd
   resources:
     - assets/
 
@@ -17,11 +16,9 @@ website:
     logo-href: https://nanda.isr.umich.edu/
     left:
       - href: index.qmd
-        text: Before you join
+        text: Before you begin
       - href: notebook.qmd
-        text: Walkthrough
-      - href: slides.qmd
-        text: Slides
+        text: Notebook
   page-footer:
     left: "National Neighborhood Data Archive (NaNDA) · Institute for Social Research, University of Michigan"
     right: "[Source on GitHub](https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026)"
@@ -34,6 +31,9 @@ format:
     code-copy: true
     code-overflow: wrap
     df-print: kable
+    highlight-style: a11y
+    include-in-header: a11y-header.html
+    include-after-body: a11y-tabsets.html
 
 # Outputs are baked in at render time so participants who cannot run code
 # still see every result. Do NOT set eval: false at the project level.
