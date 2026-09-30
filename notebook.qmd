@@ -36,13 +36,15 @@ By the end you will be able to:
   it costs. [Section 2](#sec-geocoding)
 - **Tell a ZIP code from a ZCTA**, and turn one into the other with a crosswalk
   without losing rows. [Section 3](#sec-crosswalk)
+- **Test whether the rows you lost differ from the rows you kept**, before anything
+  from NaNDA is attached. [Who did you lose?](#sec-who-lost)
 - **Match the census boundary year** across your codes, the crosswalk, and the NaNDA
   file, and recognize what goes wrong when they disagree.
   [Section 4](#sec-join), [side by side](#sec-side-by-side)
 - **Carry a measure past its last published year** and write that decision into your
   methods. [Carrying Social Services forward](#sec-carry-forward)
-- **Check a join**: count who matched, name why the rest did not, and test whether the
-  unmatched rows differ from the matched. [Who did you lose?](#sec-who-lost)
+- **Check a join**: count who matched and name why the rest did not.
+  [Checking the join](#sec-check-join)
 - **Ask the four questions** before every link, and cite the NaNDA datasets you use.
   [Four questions](#four-questions), [Section 5](#sec-nowwhat)
 :::
@@ -633,6 +635,71 @@ your own data, read the crosswalk's documentation for its target boundaries befo
 anything else.
 :::
 
+### Who did you lose? {#sec-who-lost}
+
+The table above is a headline, not a diagnostic. It tells you the size of the loss and
+nothing about its shape. The diagnostic is whether the rows that did not get a ZCTA
+differ from the rows that did, and it belongs here, before anything from NaNDA is
+attached.
+
+In this file about {{< var synthetic.zip_missing_pct >}} of rows have no ZIP at all. If
+those rows are disproportionately rural, older, or in worse health, the matched sample
+is no longer the sample you drew. Every neighborhood coefficient you estimate is then
+conditional on having a mailable address. **That is a selection problem, and it does
+not announce itself.**
+
+Neither language does this for you. Isolate the rows without a ZCTA and put their
+means beside the others' means on the variables the study is about.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+#| label: who-is-missing
+
+# The question a match rate cannot answer: are the people who fell out different
+# from the people who stayed, on the things the study is actually about?
+mydata_zcta10 %>%
+  group_by(has_zcta = !is.na(zcta10)) %>%
+  summarise(
+    n                 = n(),
+    loneliness        = round(mean(loneliness,        na.rm = TRUE), 2),
+    physical_activity = round(mean(physical_activity, na.rm = TRUE), 2),
+    own_pet           = round(mean(own_pet,           na.rm = TRUE), 3),
+    .groups = "drop"
+  )
+```
+
+### Stata
+
+```{.stata}
+* The question a match rate cannot answer: are the people who fell out different
+* from the people who stayed, on the things the study is actually about?
+use `mydata_zcta10', clear
+generate byte has_zcta = !missing(zcta10)
+tabstat loneliness physical_activity own_pet, by(has_zcta) statistics(n mean) format(%9.3f)
+```
+
+### Python
+
+```{.python}
+# The question a match rate cannot answer: are the people who fell out different
+# from the people who stayed, on the things the study is actually about?
+(mydata_zcta10.assign(has_zcta=mydata_zcta10["zcta10"].notna())
+   .groupby("has_zcta")
+   .agg(n=("has_zcta", "size"),
+        loneliness=("loneliness", "mean"),
+        physical_activity=("physical_activity", "mean"),
+        own_pet=("own_pet", "mean"))
+   .round({"loneliness": 2, "physical_activity": 2, "own_pet": 3})
+   .reset_index())
+```
+
+:::
+
+The same check applies after every join that follows. Section 4 repeats it against
+the NaNDA file, where a second set of reasons can drop rows.
+
 ---
 
 ## 4. Which boundaries? Joining, and checking the join {#sec-join}
@@ -1106,21 +1173,12 @@ want 2020 boundaries instead, use a crosswalk that produces 2020 codes and the
 is let the file that happens to be open decide.
 :::
 
-### Who did you lose? {#sec-who-lost}
+### Checking the join {#sec-check-join}
 
-A match rate is a headline, not a diagnostic. It tells you the size of the loss and
-nothing about its shape. The diagnostic is whether the rows that did not match differ
-from the rows that did.
-
-In this file about {{< var synthetic.zip_missing_pct >}} of rows have no ZIP at all. If
-those rows are disproportionately rural, older, or in worse health, the matched sample
-is no longer the sample you drew. Every neighborhood coefficient you estimate is then
-conditional on having a mailable address. **That is a selection problem, and it does
-not announce itself.**
-
-Neither language does this for you. dplyr's joins are silent, and Stata's `_merge`
-reports the count, not the composition. Isolate the unmatched rows and put their means
-beside the matched rows' means on the variables the study is about.
+The same question as [Section 3](#sec-who-lost), one join later. A row that reached
+this point has a ZCTA; it can still fail to find a NaNDA row. dplyr's joins are
+silent, and Stata's `_merge` reports the count, not the composition, so the counting
+is built in by hand: the match rate, then the reasons behind every miss.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -1272,51 +1330,8 @@ rows telling you something upstream is misaligned, which is why the table lists
 reasons and not just a count. The fourth reason, **year past coverage**, is absent only
 because we carried Social Services forward. Without that step, 407 rows would sit in
 that line. Either way it is a limit of the NaNDA file, handled by a decision you state
-in your methods.
-
-::: {.panel-tabset group="language"}
-### R
-
-```{r}
-#| label: who-is-missing
-
-# The question a match rate cannot answer: are the people who fell out different
-# from the people who stayed, on the things the study is actually about?
-mydata_nanda %>%
-  group_by(in_nanda) %>%
-  summarise(
-    n                 = n(),
-    loneliness        = round(mean(loneliness,        na.rm = TRUE), 2),
-    physical_activity = round(mean(physical_activity, na.rm = TRUE), 2),
-    own_pet           = round(mean(own_pet,           na.rm = TRUE), 3),
-    .groups = "drop"
-  )
-```
-
-### Stata
-
-```{.stata}
-* The question a match rate cannot answer: are the people who fell out different
-* from the people who stayed, on the things the study is actually about?
-use `mydata_nanda', clear
-tabstat loneliness physical_activity own_pet, by(in_nanda) statistics(n mean) format(%9.3f)
-```
-
-### Python
-
-```{.python}
-# The question a match rate cannot answer: are the people who fell out different
-# from the people who stayed, on the things the study is actually about?
-(mydata_nanda.groupby("in_nanda")
-   .agg(n=("in_nanda", "size"),
-        loneliness=("loneliness", "mean"),
-        physical_activity=("physical_activity", "mean"),
-        own_pet=("own_pet", "mean"))
-   .round({"loneliness": 2, "physical_activity": 2, "own_pet": 3})
-   .reset_index())
-```
-
-:::
+in your methods. If the reasons table shows anything beyond what Section 3 already
+explained, run the [who-did-you-lose comparison](#sec-who-lost) again on `in_nanda`.
 
 ### A toy model, to show the join was for something
 

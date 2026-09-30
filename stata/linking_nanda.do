@@ -113,6 +113,13 @@ tabulate zcta_status
 drop _merge
 save `mydata_zcta10'
 
+* ---- who-is-missing ----
+* The question a match rate cannot answer: are the people who fell out different
+* from the people who stayed, on the things the study is actually about?
+use `mydata_zcta10', clear
+generate byte has_zcta = !missing(zcta10)
+tabstat loneliness physical_activity own_pet, by(has_zcta) statistics(n mean) format(%9.3f)
+
 * ---- carry-forward ----
 * Stata has no complete(); every ZCTA here has a 2022 row, so make three copies
 * of it and number them 2023-2025. Then carry each ZCTA's last value down into
@@ -259,12 +266,6 @@ replace  reason = "year past NaNDA's coverage" if year > 2022
 replace  reason = "ZIP not in the crosswalk"   if missing(zcta10)
 replace  reason = "no ZIP to start from"       if missing(zip)
 tabulate reason
-
-* ---- who-is-missing ----
-* The question a match rate cannot answer: are the people who fell out different
-* from the people who stayed, on the things the study is actually about?
-use `mydata_nanda', clear
-tabstat loneliness physical_activity own_pet, by(in_nanda) statistics(n mean) format(%9.3f)
 
 * ---- toy-model ----
 use `mydata_nanda', clear

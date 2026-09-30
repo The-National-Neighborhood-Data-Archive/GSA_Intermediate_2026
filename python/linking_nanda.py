@@ -101,6 +101,18 @@ mydata_zcta10.assign(zcta_status=np.select(
     ["no ZIP", "ZIP not in crosswalk"], default="has a ZCTA",
 ))["zcta_status"].value_counts()
 
+# ---- who-is-missing ----
+# The question a match rate cannot answer: are the people who fell out different
+# from the people who stayed, on the things the study is actually about?
+(mydata_zcta10.assign(has_zcta=mydata_zcta10["zcta10"].notna())
+   .groupby("has_zcta")
+   .agg(n=("has_zcta", "size"),
+        loneliness=("loneliness", "mean"),
+        physical_activity=("physical_activity", "mean"),
+        own_pet=("own_pet", "mean"))
+   .round({"loneliness": 2, "physical_activity": 2, "own_pet": 3})
+   .reset_index())
+
 # ---- carry-forward ----
 # pandas has no complete(); every ZCTA here has a 2022 row, so copy it to
 # 2023-2025. Then carry each ZCTA's last value down into anything still missing.
@@ -232,17 +244,6 @@ unmatched.assign(reason=np.select(
     ["no ZIP to start from", "ZIP not in the crosswalk", "year past NaNDA's coverage"],
     default="ZCTA not in the NaNDA file",
 ))["reason"].value_counts()
-
-# ---- who-is-missing ----
-# The question a match rate cannot answer: are the people who fell out different
-# from the people who stayed, on the things the study is actually about?
-(mydata_nanda.groupby("in_nanda")
-   .agg(n=("in_nanda", "size"),
-        loneliness=("loneliness", "mean"),
-        physical_activity=("physical_activity", "mean"),
-        own_pet=("own_pet", "mean"))
-   .round({"loneliness": 2, "physical_activity": 2, "own_pet": 3})
-   .reset_index())
 
 # ---- toy-model ----
 mydata_nanda["count_totindivfamilyservices_6cat"] = pd.cut(
