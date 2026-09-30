@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Before You Join – Linking NaNDA With Your Data</title>
+<title>Before You Begin – Linking NaNDA With Your Data</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -77,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-0f2cd577ae4b1294fbe8522305e36b6a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d06693961f66eae4e93a72b7c54b7e07.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7fd468d2aa02a067d9b56c1255aad739.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e23fd13f82b490226473776369bfa098.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -108,6 +108,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<!-- Accessibility and header fixes shared by every page (issues #4, #5, #7 in the
+     private repo). Loaded through include-in-header in _quarto.yml. -->
+<style>
+  .skip-link {
+    position: absolute; left: -999px; top: 0;
+    background: #004A98; color: #fff; padding: .5rem 1rem; z-index: 2000;
+  }
+  .skip-link:focus { left: 1rem; top: 1rem; }
+  a:focus-visible, button:focus-visible,
+  .nav-link:focus-visible, .code-copy-button:focus-visible {
+    outline: 3px solid #004A98; outline-offset: 2px; box-shadow: none;
+  }
+  .table-responsive { overflow-x: auto; }
+  .navbar-title { white-space: normal; }
+  .navbar-brand-text { color: #004A98; font-weight: 700; }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Skip link: first Tab stop on every page.
+    var a = document.createElement('a');
+    a.className = 'skip-link';
+    a.href = '#quarto-document-content';
+    a.textContent = 'Skip to content';
+    document.body.prepend(a);
+
+    // Tables scroll inside their own box instead of widening the page.
+    document.querySelectorAll('table').forEach(function (table) {
+      if (table.parentNode.classList.contains('table-responsive')) return;
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table-responsive';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    // Accessible names on the buttons Quarto generates.
+    document.querySelectorAll('.code-copy-button').forEach(function (btn) {
+      btn.setAttribute('aria-label', 'Copy code');
+    });
+    var searchBtn = document.querySelector('#quarto-search a, .aa-DetachedSearchButton');
+    if (searchBtn && !searchBtn.getAttribute('aria-label')) {
+      searchBtn.setAttribute('aria-label', 'Search');
+    }
+
+    // Site title: only "NaNDA" is a link (to the NaNDA site). The logo beside it
+    // already links there; the pages are one click away in the navbar.
+    var brand = document.querySelector('.navbar-brand:not(.navbar-brand-logo) .navbar-title');
+    if (brand) {
+      var link = brand.closest('a');
+      var text = brand.textContent;
+      var parts = text.split('NaNDA');
+      if (link && parts.length === 2) {
+        var span = document.createElement('span');
+        span.className = 'navbar-brand navbar-brand-text';
+        span.append(document.createTextNode(parts[0]));
+        var n = document.createElement('a');
+        n.href = 'https://nanda.isr.umich.edu/';
+        n.textContent = 'NaNDA';
+        span.append(n);
+        span.append(document.createTextNode(parts[1]));
+        link.replaceWith(span);
+      }
+    }
+  });
+</script>
 
 
 </head>
@@ -135,15 +199,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Before you join</span></a>
+<span class="menu-text">Before you begin</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./notebook.html"> 
-<span class="menu-text">Walkthrough</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./slides.html"> 
-<span class="menu-text">Slides</span></a>
+<span class="menu-text">Notebook</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -175,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Before You Join</h1>
+<h1 class="title">Before You Begin</h1>
 <p class="subtitle lead">Linking NaNDA With Your Data · Breakout 2 — Intermediate</p>
 </div>
 
@@ -196,33 +256,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="the-short-version" class="level2">
 <h2 class="anchored" data-anchor-id="the-short-version">The short version</h2>
 <p><strong>You do not need to install anything, and you do not need to run any code.</strong></p>
-<p>This session is a guided walkthrough. Robert Melendez will write and run the code live on screen. Everything he types is already written out, with its output, in the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">walkthrough</a> — so you can read along on a second window, or just watch and come back to it afterward.</p>
-<p>Running the code yourself during the session is <strong>optional</strong>. If you want to, the setup is below. If it doesn’t work on the day, let it go and follow along; nothing in the session depends on your machine.</p>
+<p>This session is a guided read-along. Robert Melendez writes and runs the code live on screen. Everything he types is already written out, with its output, in the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">notebook</a>. Read along in a second window, or watch and come back to it afterward.</p>
+<p>Running the code yourself during the session is <strong>optional</strong>. The setup is below. If it does not work on the day, follow along. Nothing in the session depends on your machine.</p>
 </section>
 <section id="what-youll-get" class="level2">
 <h2 class="anchored" data-anchor-id="what-youll-get">What you’ll get</h2>
 <table class="caption-top table">
 <tbody>
 <tr class="odd">
-<td>Walkthrough (read-along, all outputs shown)</td>
-<td><a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html</a></td>
+<td>Notebook (read-along, all outputs shown)</td>
+<td><a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">Linking NaNDA With Your Data: notebook</a></td>
 </tr>
 <tr class="even">
 <td>Everything as a single download</td>
-<td><a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">workshop-materials.zip</a></td>
+<td><a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">Workshop materials (ZIP)</a></td>
 </tr>
 <tr class="odd">
 <td>Source and version history</td>
-<td><a href="https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026">https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026</a></td>
+<td><a href="https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026">GitHub repository</a></td>
 </tr>
 <tr class="even">
-<td>Archived + citable</td>
+<td>Archived and citable</td>
 <td><p>DOI assigned at the v1.0.0 release (Zenodo); until then, cite the repository URL</p></td>
 </tr>
 </tbody>
 </table>
-<p>The ZIP contains the synthetic dataset and its codebook, the crosswalk file (the lookup table that turns ZIP codes into Census ZCTAs), the walkthrough source with its Stata and Python equivalents, and an offline copy of this site.</p>
-<p><strong>The NaNDA files themselves are not in the ZIP.</strong> NaNDA is distributed through ICPSR, which asks for a free account, so we can’t pass the files along for you — you download your own, which takes about five minutes. The steps are in the optional setup below and in <code>data/nanda/README.md</code> inside the ZIP. You only need them if you want to run the code; every output is already on the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">walkthrough</a>.</p>
+<p>The ZIP contains:</p>
+<ul>
+<li>the synthetic dataset and its codebook</li>
+<li>the crosswalk file, the lookup table that turns ZIP codes into Census ZCTAs</li>
+<li>the notebook source, with its Stata and Python equivalents</li>
+<li>an offline copy of this site</li>
+</ul>
+<p><strong>The NaNDA files themselves are not in the ZIP.</strong> NaNDA is distributed through <a href="https://www.icpsr.umich.edu/">ICPSR</a>, which asks for a free account, so you download your own. It takes about five minutes. The steps are in the optional setup below and in <code>data/nanda/README.md</code> inside the ZIP. You only need them to run the code; every output is already on the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">notebook</a>.</p>
 </section>
 <section id="if-you-do-want-to-run-along" class="level2">
 <h2 class="anchored" data-anchor-id="if-you-do-want-to-run-along">If you do want to run along</h2>
@@ -239,17 +305,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li><p><strong>R</strong> (4.3 or newer) — <a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></p></li>
-<li><p><strong>RStudio Desktop</strong> (free) — <a href="https://posit.co/download/rstudio-desktop/" class="uri">https://posit.co/download/rstudio-desktop/</a></p></li>
+<li><p><strong>R</strong> (4.3 or newer): <a href="https://cran.r-project.org/">cran.r-project.org</a></p></li>
+<li><p><strong>RStudio Desktop</strong> (free): <a href="https://posit.co/download/rstudio-desktop/">posit.co</a></p></li>
 <li><p>Open RStudio and run:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"here"</span>, <span class="st">"janitor"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>(<code>readxl</code>, which reads the crosswalk, installs as part of <code>tidyverse</code>.)</p></li>
-<li><p>Download and unzip <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">workshop-materials.zip</a>.</p></li>
-<li><p><strong>Get the NaNDA files from ICPSR.</strong> Sign in at <a href="https://www.icpsr.umich.edu/" class="uri">https://www.icpsr.umich.edu/</a> with a free account, then download these in <strong>R</strong> format (Stata and delimited versions are on the same pages):</p>
+<li><p>Download and unzip the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/workshop-materials.zip">workshop materials</a>.</p></li>
+<li><p><strong>Get the NaNDA files from ICPSR.</strong> Sign in at <a href="https://www.icpsr.umich.edu/">icpsr.umich.edu</a> with a free account, then download these in <strong>R</strong> format (Stata and delimited versions are on the same pages):</p>
 <ul>
-<li><strong>NaNDA: Social Services</strong> — the ZCTA 2010 file. &lt;https://doi.org/10.3886/ICPSR208207.V5&gt;</li>
-<li><strong>NaNDA: Parks</strong> — dataset 2 (DS0002). &lt;https://doi.org/10.3886/ICPSR38586&gt;</li>
-<li><strong>NaNDA: Socioeconomic Status</strong> — datasets 3 and 8 (DS0003 and DS0008). <a href="https://doi.org/10.3886/ICPSR38528" class="uri">https://doi.org/10.3886/ICPSR38528</a></li>
+<li><a href="https://doi.org/10.3886/ICPSR208207.V5"><strong>NaNDA: Social Services</strong></a>: the ZCTA 2010 file.</li>
+<li><a href="https://doi.org/10.3886/ICPSR38586"><strong>NaNDA: Parks</strong></a>: dataset 2 (DS0002).</li>
+<li><a href="https://doi.org/10.3886/ICPSR38528"><strong>NaNDA: Socioeconomic Status</strong></a>: datasets 3 and 8 (DS0003 and DS0008).</li>
 </ul>
 <p>Unzip each one, dig the data file out of the nested folders, and put all four in <code>data/nanda/</code> inside the unzipped workshop folder. <code>data/nanda/README.md</code> has the filenames and the same steps in more detail.</p></li>
 <li><p>Open <code>workshop.Rproj</code>, then open <code>notebook.qmd</code>, and run the first chunk. If it prints a preview of the data, you’re set.</p></li>
@@ -268,22 +334,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Save the troubleshooting for later. The walkthrough page has every output already rendered, so nothing you’d see by running the code is missing from it. Follow along on screen, and email us afterward: <strong>nanda-admin@umich.edu</strong>.</p>
+<p>Save the troubleshooting for later. The notebook has every output already rendered, so nothing you would see by running the code is missing from it. Follow along on screen, and email us afterward: <a href="mailto:nanda-admin@umich.edu">nanda-admin@umich.edu</a>.</p>
 </div>
 </div>
 </section>
 <section id="what-we-assume-you-already-know" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-assume-you-already-know">What we assume you already know</h2>
-<p>You’ve used R, Stata, or another statistical package to open a dataset and join two tables. This is <strong>not</strong> an R lesson. It’s about what goes wrong when you link individual-level data to neighborhood-level data, and how to catch it, in whichever language you use.</p>
+<p>You have used R, Stata, or another statistical package to open a dataset and join two tables. This is <strong>not</strong> an R lesson. It is about what goes wrong when you link individual-level data to neighborhood-level data, and how to catch it, in whichever language you use.</p>
 </section>
 <section id="whats-out-of-scope" class="level2">
 <h2 class="anchored" data-anchor-id="whats-out-of-scope">What’s out of scope</h2>
-<p>Geocoding street addresses to census tracts. The synthetic dataset includes addresses, and we’ll point at how you’d do it, but it isn’t part of this session.</p>
+<p>Geocoding street addresses to census tracts. The synthetic dataset includes addresses, and Section 2 of the notebook explains the route, but the code stays on ZIP codes.</p>
 </section>
 <section id="getting-in" class="level2">
 <h2 class="anchored" data-anchor-id="getting-in">Getting in</h2>
 <ul>
-<li><strong>Date:</strong> October 10, 2026</li>
+<li><strong>Date:</strong> October 7, 2026</li>
 <li><strong>Length:</strong> 45 minutes</li>
 <li><strong>Platform:</strong> Zoom</li>
 <li><strong>Joining:</strong> GSA sends the meeting link to registrants; it is not posted here.</li>
@@ -367,7 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/The-National-Neighborhood-Data-Archive\.github\.io\/GSA_Intermediate_2026\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
