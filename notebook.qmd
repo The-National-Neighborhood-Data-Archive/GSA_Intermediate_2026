@@ -25,6 +25,28 @@ rendered output are R. The Stata and Python tabs show the same step in your lang
 Pick a tab once and the whole page follows.
 :::
 
+::: {.callout-note}
+### What you'll learn
+
+By the end you will be able to:
+
+- **Say which location identifier your data carry**, how complete it is, and what it
+  identifies. [Section 1](#sec-identifiers)
+- **Decide whether geocoding addresses is the right route** for your study, and what
+  it costs. [Section 2](#sec-geocoding)
+- **Tell a ZIP code from a ZCTA**, and turn one into the other with a crosswalk
+  without losing rows. [Section 3](#sec-crosswalk)
+- **Match the census boundary year** across your codes, the crosswalk, and the NaNDA
+  file, and recognize what goes wrong when they disagree.
+  [Section 4](#sec-join), [side by side](#sec-side-by-side)
+- **Carry a measure past its last published year** and write that decision into your
+  methods. [Carrying Social Services forward](#sec-carry-forward)
+- **Check a join**: count who matched, name why the rest did not, and test whether the
+  unmatched rows differ from the matched. [Who did you lose?](#sec-who-lost)
+- **Ask the four questions** before every link, and cite the NaNDA datasets you use.
+  [Four questions](#four-questions), [Section 5](#sec-nowwhat)
+:::
+
 ---
 
 ## 0. Setup {#sec-setup}
@@ -634,7 +656,7 @@ lines and makes no sound.
 
 The rest of this section is mostly diagnostics. The join is the cheap part.
 
-### Carrying Social Services forward
+### Carrying Social Services forward {#sec-carry-forward}
 
 Social Services ends in 2022; our data runs to 2025. Before joining, we give every ZCTA
 rows through 2025 and carry its most recent values into them. **That is a decision, not
@@ -879,7 +901,7 @@ mydata_nanda = mydata_nanda.merge(ses2010, how="left", on="zcta10")
 
 :::
 
-### 2010 vs 2020 boundaries, side by side
+### 2010 vs 2020 boundaries, side by side {#sec-side-by-side}
 
 The same join, run twice with the same crosswalked codes: once against the
 2010-boundary SES file and once against the 2020-boundary file. Both runs succeed.
@@ -1084,7 +1106,7 @@ want 2020 boundaries instead, use a crosswalk that produces 2020 codes and the
 is let the file that happens to be open decide.
 :::
 
-### Who did you lose?
+### Who did you lose? {#sec-who-lost}
 
 A match rate is a headline, not a diagnostic. It tells you the size of the loss and
 nothing about its shape. The diagnostic is whether the rows that did not match differ
@@ -1370,7 +1392,7 @@ if smf is not None:
 
 :::
 
-::: {.callout-tip}
+::: {.callout-tip #four-questions}
 ### Four questions to ask before every link
 
 1. **What location information do my data contain?** An address, a ZIP code, a Census
