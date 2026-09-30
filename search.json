@@ -186,7 +186,7 @@
     "href": "notebook.html#where-to-go-next",
     "title": "Linking NaNDA With Your Data",
     "section": "Where to go next",
-    "text": "Where to go next\n\nThe NaNDA catalogue on openICPSR, https://www.openicpsr.org/openicpsr/nanda. Every dataset, every geography, free to download.\nThe NaNDA website, https://nanda.isr.umich.edu/. Documentation, news, and how to reach the team.\nOur published merge code: Chenoweth & Khan, code for merging NaNDA ZCTA-level datasets with the UDS Mapper crosswalk (2024), &lt;https://doi.org/10.3886/E124461V4&gt;.\nThe crosswalk: UDS Mapper ZIP Code to ZCTA Crosswalk, &lt;https://web.archive.org/web/20220402144231/https://udsmapper.org/wp-content/uploads/2021/12/ZIPCodetoZCTACrosswalk2019.xlsx&gt;.\nQuestions after today: nanda-admin@umich.edu"
+    "text": "Where to go next\n\nThe NaNDA catalogue on openICPSR, https://www.openicpsr.org/openicpsr/nanda. Every dataset, every geography, free to download. When a NaNDA measure ends up in something you publish, cite the dataset itself by its DOI (each one has a ready-made citation on its ICPSR page), not just these materials: that is a condition of the download, and it is how the archive stays funded.\nThe NaNDA website, https://nanda.isr.umich.edu/. Documentation, news, and how to reach the team.\nOur published merge code: Chenoweth & Khan, code for merging NaNDA ZCTA-level datasets with the UDS Mapper crosswalk (2024), &lt;https://doi.org/10.3886/E124461V4&gt;.\nThe crosswalk: UDS Mapper ZIP Code to ZCTA Crosswalk, &lt;https://web.archive.org/web/20220402144231/https://udsmapper.org/wp-content/uploads/2021/12/ZIPCodetoZCTACrosswalk2019.xlsx&gt;.\nQuestions after today: nanda-admin@umich.edu"
   },
   {
     "objectID": "notebook.html#session-information",
