@@ -20,7 +20,7 @@ website:
       - href: notebook.qmd
         text: Notebook
   page-footer:
-    left: "National Neighborhood Data Archive (NaNDA) · Institute for Social Research, University of Michigan"
+    left: "[National Neighborhood Data Archive (NaNDA)](https://nanda.isr.umich.edu/) · [Institute for Social Research](https://isr.umich.edu/), [University of Michigan](https://umich.edu/)"
     right: "[Source on GitHub](https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026)"
 
 format:
