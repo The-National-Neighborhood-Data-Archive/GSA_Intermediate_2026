@@ -1,0 +1,187 @@
+/*-- scss:defaults --*/
+
+// NaNDA brand for the HTML pages (walkthrough, before-you-join). Tokens from
+// the NaNDA design system (tokens/colors.css, tokens/typography.css):
+//
+//   Navy      #004a98   headings, links, primary actions, footer
+//   Sky       #1d9add   accents, link hover
+//   Ink 1     #050708   body copy (never pure black — this is the brand near-black)
+//   Ink 2     #333a3f   secondary text
+//   Ink 3     #5c666d   muted text
+//   Surface   #f5f8fa   alternate surfaces (code blocks)
+//   Sky tint  #e6f4fc   section bands, callout backgrounds
+//   Border    #d8e1e8
+//
+// Type: Tahoma only, fallback Verdana / Segoe UI / sans-serif. The brand font
+// file is Microsoft's and is not redistributed here; on machines without
+// Tahoma the fallback stack renders. Body 16px / 1.6; headings bold navy.
+// No gradients, no textures, no transparency, no emoji.
+
+$nanda-navy:      #004a98;
+$nanda-navy-dark: #003a77;
+$nanda-sky:       #1d9add;
+$nanda-sky-tint:  #e6f4fc;
+$nanda-sky-tint-2:#cdeaf8;
+$nanda-navy-tint: #e5edf5;
+$ink-1:           #050708;
+$ink-2:           #333a3f;
+$ink-3:           #5c666d;
+$surface-alt:     #f5f8fa;
+$border-1:        #d8e1e8;
+$border-2:        #b9c8d3;
+
+$font-family-sans-serif: Tahoma, Verdana, "Segoe UI", sans-serif !default;
+$font-family-monospace: Consolas, "Courier New", monospace !default;
+$font-size-base: 1rem !default;
+$line-height-base: 1.6 !default;
+
+$body-bg:    #ffffff !default;
+$body-color: $ink-1 !default;
+$headings-color: $nanda-navy !default;
+$headings-font-weight: 700 !default;
+
+$link-color: $nanda-navy !default;
+$link-hover-color: $nanda-sky !default;
+$link-decoration: underline !default;
+
+$navbar-bg: #ffffff !default;
+$navbar-fg: $nanda-navy !default;
+$navbar-hl: $nanda-sky !default;
+
+$footer-bg: $nanda-navy !default;
+$footer-fg: #ffffff !default;
+
+$code-bg: $surface-alt !default;
+$code-color: $ink-2 !default;
+$border-radius: 4px !default;
+
+/*-- scss:rules --*/
+
+// Header: horizontal logo at brand size, navy nav links, hairline rule.
+.navbar {
+  border-bottom: 1px solid $border-1;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+.navbar-brand img,
+.navbar-logo {
+  max-height: 44px;
+  height: 44px;
+  width: auto;
+}
+.navbar .nav-link {
+  color: $nanda-navy;
+  font-weight: 700;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: $nanda-sky;
+}
+
+// Page title block.
+#title-block-header .title {
+  color: $nanda-navy;
+  font-weight: 700;
+}
+#title-block-header .subtitle,
+#title-block-header .quarto-title-meta {
+  color: $ink-3;
+}
+
+// Headings: h1 sits on a sky-tint band, the brand's section separator.
+h1 {
+  background: $nanda-sky-tint;
+  padding: 0.5rem 0.9rem;
+  border-radius: 4px;
+  margin-top: 2.5rem;
+}
+h2 { margin-top: 2rem; }
+h3 { margin-top: 1.4rem; color: $ink-2; }
+
+// Section timing line under each h1.
+h1 + p > em {
+  color: $ink-3;
+  font-style: normal;
+  font-size: 0.95rem;
+}
+
+// Code.
+pre {
+  background: $surface-alt;
+  border: 1px solid $border-1;
+  border-left: 4px solid $nanda-navy;
+  border-radius: 4px;
+}
+pre code { color: $ink-2; }
+code:not(pre code) {
+  background: $surface-alt;
+  color: $nanda-navy;
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+}
+
+// Language tabs (the rosetta stone). Navy active tab, no pill shapes.
+.panel-tabset .nav-tabs {
+  border-bottom: 2px solid $border-1;
+}
+.panel-tabset .nav-tabs .nav-link {
+  color: $ink-3;
+  font-weight: 700;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  border-radius: 0;
+}
+.panel-tabset .nav-tabs .nav-link.active {
+  color: $nanda-navy;
+  border-bottom-color: $nanda-navy;
+  background: transparent;
+}
+.panel-tabset .tab-content {
+  padding-top: 0.75rem;
+}
+
+// Callouts: brand tints only, no red, orange, or green. Quarto sets these with
+// high-specificity selectors, so match them.
+div.callout.callout-style-default {
+  border-left-width: 4px;
+  border-radius: 4px;
+  border-color: $border-1;
+}
+div.callout.callout-style-default > .callout-header {
+  background: $nanda-sky-tint;
+  color: $nanda-navy;
+  font-weight: 700;
+}
+div.callout.callout-tip,
+div.callout.callout-note       { border-left-color: $nanda-sky; }
+div.callout.callout-warning,
+div.callout.callout-important  { border-left-color: $nanda-navy; }
+div.callout.callout-style-default.callout-warning > .callout-header,
+div.callout.callout-style-default.callout-important > .callout-header {
+  background: $nanda-navy-tint;
+}
+div.callout .callout-icon::before { filter: none; opacity: 0.8; }
+
+// Tables.
+table {
+  border-top: 2px solid $nanda-navy;
+  border-bottom: 1px solid $border-2;
+}
+thead th {
+  color: $nanda-navy;
+  border-bottom: 1px solid $border-2;
+}
+
+// Footer: navy band, white text, white links.
+.nav-footer {
+  background: $nanda-navy;
+  color: #ffffff;
+  padding: 1.2rem 0;
+}
+.nav-footer a { color: #ffffff; }
+.nav-footer a:hover { color: $nanda-sky-tint-2; }
+
+// TOC.
+#TOC a, .sidebar nav a { color: $ink-2; }
+#TOC a.active, .sidebar nav a.active { color: $nanda-navy; font-weight: 700; }

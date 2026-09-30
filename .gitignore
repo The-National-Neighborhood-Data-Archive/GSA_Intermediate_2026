@@ -1,0 +1,14 @@
+/_site/
+/.quarto/
+/_freeze/site_libs/
+*_files/
+.Rproj.user/
+.Rhistory
+.DS_Store
+Thumbs.db
+
+# NaNDA extracts are downloaded from ICPSR by whoever renders. Never commit them.
+data/nanda/*
+!data/nanda/README.md
+
+**/*.quarto_ipynb

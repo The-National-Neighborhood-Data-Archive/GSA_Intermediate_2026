@@ -1,0 +1,18 @@
+# Normalize line endings; keep shell scripts and Quarto sources LF so they
+# run and render identically on Windows, macOS, and Linux.
+* text=auto
+*.sh text eol=lf
+*.qmd text eol=lf
+*.yml text eol=lf
+*.scss text eol=lf
+*.md text eol=lf
+*.cff text eol=lf
+*.do text eol=lf
+*.R text eol=lf
+*.csv text eol=lf
+
+# Binary
+*.dta binary
+*.zip binary
+*.png binary
+*.pdf binary

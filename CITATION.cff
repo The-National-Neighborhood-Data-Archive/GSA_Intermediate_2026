@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+title: "Linking NaNDA With Your Data: GSA 2026 workshop materials"
+message: "If you use these materials, please cite them."
+type: software
+authors:
+  - family-names: Clary
+    given-names: William
+    affiliation: "University of Michigan, Institute for Social Research"
+  - family-names: Melendez
+    given-names: Robert
+    affiliation: "University of Michigan, Institute for Social Research"
+  - family-names: Noppert
+    given-names: Grace
+    affiliation: "University of Michigan, Institute for Social Research"
+  - family-names: Gypin
+    given-names: Lindsay
+    affiliation: "University of Michigan, Institute for Social Research"
+  - family-names: Clarke
+    given-names: Philippa
+    affiliation: "University of Michigan, Institute for Social Research"
+repository-code: "https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026"
+url: "https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/"
+license: MIT
+date-released: 2026-10-01
+version: 1.0.0
+keywords:
+  - NaNDA
+  - neighborhood data
+  - data linkage
+  - ZCTA
+  - reproducibility
+# TODO: confirm author order and the inclusion of Gypin and Clarke (Sep 30 meeting) before tagging.
+# TODO: add the Zenodo DOI as `identifiers:` once minted.

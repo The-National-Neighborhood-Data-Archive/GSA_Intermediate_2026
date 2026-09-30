@@ -1,0 +1,45 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+    - notebook.qmd
+    - slides.qmd
+  resources:
+    - assets/
+
+website:
+  title: "Linking NaNDA With Your Data"
+  description: "GSA 2026 online workshop — Breakout 2 (Intermediate)"
+  navbar:
+    logo: assets/nanda/logo_horizontal.png
+    logo-alt: "National Neighborhood Data Archive"
+    logo-href: https://nanda.isr.umich.edu/
+    left:
+      - href: index.qmd
+        text: Before you join
+      - href: notebook.qmd
+        text: Walkthrough
+      - href: slides.qmd
+        text: Slides
+  page-footer:
+    left: "National Neighborhood Data Archive (NaNDA) · Institute for Social Research, University of Michigan"
+    right: "[Source on GitHub](https://github.com/The-National-Neighborhood-Data-Archive/GSA_Intermediate_2026)"
+
+format:
+  html:
+    theme: [cosmo, nanda-theme.scss]
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    df-print: kable
+
+# Outputs are baked in at render time so participants who cannot run code
+# still see every result. Do NOT set eval: false at the project level.
+execute:
+  echo: true
+  eval: true
+  warning: true
+  message: true
+  freeze: auto

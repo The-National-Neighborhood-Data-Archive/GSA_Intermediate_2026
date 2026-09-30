@@ -1,0 +1,134 @@
+/*-- scss:defaults --*/
+
+// GSA 2026 design tokens, lifted from GSA2026_PPT_Template.pptx.
+//
+//   Dark Blue  #16478E   headings
+//   Light Blue #288BE4   accent, links
+//   Purple     #5F6DBB   secondary accent — use sparingly
+//   Text Gray  #3B3838   body copy. The template says explicitly: never 100% black
+//   White      #FFFFFF
+//
+// Their slide master: GSA 2026 logo bottom-right on every slide (about 13% of
+// slide width), wave band along the bottom of content pages. We use the logo on
+// every slide via reveal's `logo:` option and the wave band on the title slide.
+// Content is vertically centered (`center: true`), as in their layouts.
+//
+// Type scale from slideLayout2: title 44pt bold / intro 28pt / subhead 30pt bold
+// / body 24pt. Scaled down here — 44pt is sized for a ballroom projector, not a
+// Zoom window where people are also running RStudio beside us.
+
+$gsa-dark-blue:  #16478E;
+$gsa-light-blue: #288BE4;
+$gsa-purple:     #5F6DBB;
+$gsa-text-gray:  #3B3838;
+$gsa-white:      #FFFFFF;
+
+$font-family-sans-serif: Arial, Helvetica, sans-serif !default;
+
+$body-bg:    $gsa-white !default;
+$body-color: $gsa-text-gray !default;
+
+$presentation-font-size-root: 36px !default;
+$presentation-heading-font: $font-family-sans-serif !default;
+$presentation-heading-color: $gsa-dark-blue !default;
+$presentation-heading-font-weight: 700 !default;
+
+$link-color: $gsa-light-blue !default;
+$link-color-hover: $gsa-dark-blue !default;
+
+$presentation-h1-font-size: 1.7em !default;
+$presentation-h2-font-size: 1.35em !default;
+$presentation-h3-font-size: 1.1em !default;
+
+/*-- scss:rules --*/
+
+// Logo: reveal places it bottom-right. Match the template's proportion.
+.reveal .slide-logo {
+  max-height: 3.2em !important;
+  bottom: 0.5em !important;
+  right: 0.8em !important;
+}
+
+// Slides: content column sits in the middle of the slide, with room left
+// below for the logo. The template's text block starts about 6% from the left
+// and the title sits in its own band.
+.reveal .slides > section {
+  padding: 0 4% 3em 4%;
+}
+
+.reveal h2 {
+  margin-bottom: 0.6em;
+}
+
+// Template notes: anything in all caps in the template stays all caps.
+// Applied here to the eyebrow label only.
+.reveal .eyebrow {
+  font-size: 0.5em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $gsa-light-blue;
+  font-weight: 700;
+  margin-bottom: 0.4em;
+}
+
+.reveal h1, .reveal h2, .reveal h3 {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.reveal ul { margin-left: 0.6em; }
+
+.reveal li {
+  margin-bottom: 0.45em;
+  line-height: 1.35;
+}
+
+// Numbered lists on the closing checklist slide.
+.reveal ol li::marker {
+  color: $gsa-dark-blue;
+  font-weight: 700;
+}
+
+.reveal .big-url {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: $gsa-dark-blue;
+  word-break: break-all;
+}
+
+.reveal .muted {
+  color: lighten($gsa-text-gray, 22%);
+  font-size: 0.75em;
+}
+
+// Presenter attribution on the title slide.
+.reveal .roles {
+  font-size: 0.65em;
+  line-height: 1.5;
+}
+
+// Title slide. Wave band comes from reveal's background attributes on the
+// slide heading in slides.qmd. The section is a flex column so items center
+// horizontally; reveal's own `center` handles vertical placement, so no
+// explicit height here (it would defeat the centering measurement).
+.reveal .slides section.title-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 5em;
+}
+.reveal .slides section.title-card img.nanda-mark {
+  order: -1;
+  height: 1.6em !important;
+  max-height: 1.6em !important;
+  width: auto !important;
+  max-width: none;
+  margin: 0 0 1.2em 0;
+}
+.reveal .title-card .roles p {
+  margin: 0.1em 0;
+}
+
+// No accent bars, no rules under titles, no sidebar stripes. The template's own
+// artwork carries the identity; competing decoration would look like imitation.
