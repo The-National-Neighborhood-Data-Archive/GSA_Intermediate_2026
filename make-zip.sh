@@ -94,6 +94,9 @@ fi
 rm -rf _offline
 "$QUARTO" render --profile offline >/dev/null
 [ -s _offline/notebook.html ] || { red "Offline render produced no _offline/notebook.html."; exit 1; }
+# Quarto treats the other output folder as a project resource and copies it
+# along, so each render nests the other. Neither copy belongs anywhere.
+rm -rf _site/_offline _offline/_site
 
 # --- Stage and zip -------------------------------------------------------------
 STAGE=$(mktemp -d)
