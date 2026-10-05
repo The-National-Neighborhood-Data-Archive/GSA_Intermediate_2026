@@ -234,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Before You Begin</h1>
-<p class="subtitle lead">Linking NaNDA With Your Data · Breakout 2 — Intermediate</p>
+<p class="subtitle lead">Linking NaNDA With Your Data · Breakout 2, Intermediate</p>
 </div>
 
 
@@ -255,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="the-short-version">The short version</h2>
 <p><strong>You do not need to install anything, and you do not need to run any code.</strong></p>
 <p>This session is a guided read-along. Robert Melendez writes and runs the code live on screen. Everything he types is already written out, with its output, in the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">notebook</a>. Read along in a second window, or watch and come back to it afterward.</p>
-<p>Running the code yourself during the session is <strong>optional</strong>. The setup is below. If it does not work on the day, follow along. Nothing in the session depends on your machine.</p>
+<p>Running the code yourself during the session is <strong>optional</strong>. The setup is below. If it does not work on the day, follow along.</p>
 </section>
 <section id="what-youll-get" class="level2">
 <h2 class="anchored" data-anchor-id="what-youll-get">What you’ll get</h2>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>the notebook source, with its Stata and Python equivalents</li>
 <li>an offline copy of this site</li>
 </ul>
-<p><strong>The NaNDA files themselves are not in the ZIP.</strong> NaNDA is distributed through <a href="https://www.icpsr.umich.edu/">ICPSR</a>, which asks for a free account, so you download your own. It takes about five minutes. The steps are in the optional setup below and in <code>data/nanda/README.md</code> inside the ZIP. You only need them to run the code; every output is already on the <a href="https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/notebook.html">notebook</a>.</p>
+<p><strong>The NaNDA files themselves are not in the ZIP.</strong> NaNDA is distributed through <a href="https://www.icpsr.umich.edu/">ICPSR</a>, which asks for a free account, so you download your own. It takes about five minutes. The steps are in the optional setup below and in <code>data/nanda/README.md</code> inside the ZIP. You only need them to run the code.</p>
 </section>
 <section id="if-you-do-want-to-run-along" class="level2">
 <h2 class="anchored" data-anchor-id="if-you-do-want-to-run-along">If you do want to run along</h2>
@@ -315,10 +315,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://doi.org/10.3886/ICPSR38586"><strong>NaNDA: Parks</strong></a>: dataset 2 (DS0002).</li>
 <li><a href="https://doi.org/10.3886/ICPSR38528"><strong>NaNDA: Socioeconomic Status</strong></a>: datasets 3 and 8 (DS0003 and DS0008).</li>
 </ul>
-<p>Unzip each one, dig the data file out of the nested folders, and put all four in <code>data/nanda/</code> inside the unzipped workshop folder. <code>data/nanda/README.md</code> has the filenames and the same steps in more detail.</p></li>
+<p>Unzip each one, extract the data file from the nested folders, and put all four in <code>data/nanda/</code> inside the unzipped workshop folder. <code>data/nanda/README.md</code> has the filenames and the same steps in more detail.</p></li>
 <li><p>Open <code>workshop.Rproj</code>, then open <code>notebook.qmd</code>, and run the first chunk. If it prints a preview of the data, you’re set.</p></li>
 </ol>
-<p><strong>Stata and Python users:</strong> equivalent <code>.do</code> files are in the <code>stata/</code> folder of the ZIP and <code>.py</code> scripts in <code>python/</code>. The live session is in R, but these do the same thing step for step and are yours to keep.</p>
+<p><strong>Stata and Python users:</strong> equivalent <code>.do</code> files are in the <code>stata/</code> folder of the ZIP and <code>.py</code> scripts in <code>python/</code>. The live session is in R, but these do the same thing step for step and are yours to keep. The R code is also there as plain scripts in <code>r/</code>, and each folder carries a second script for data that already has a 2010 tract ID instead of a ZIP code.</p>
 </div>
 </div>
 </div>
@@ -332,13 +332,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Save the troubleshooting for later. The notebook has every output already rendered, so nothing you would see by running the code is missing from it. Follow along on screen, and email us afterward: <a href="mailto:nanda-admin@umich.edu">nanda-admin@umich.edu</a>.</p>
+<p>Save the troubleshooting for later. The notebook shows every output. Follow along on screen, and email us afterward: <a href="mailto:nanda-admin@umich.edu">nanda-admin@umich.edu</a>.</p>
 </div>
 </div>
 </section>
 <section id="what-we-assume-you-already-know" class="level2">
 <h2 class="anchored" data-anchor-id="what-we-assume-you-already-know">What we assume you already know</h2>
-<p>You have used R, Stata, or another statistical package to open a dataset and join two tables. This is <strong>not</strong> an R lesson. It is about what goes wrong when you link individual-level data to neighborhood-level data, and how to catch it, in whichever language you use.</p>
+<p>You have used R, Stata, or another statistical package to open a dataset and join two tables. This session covers what goes wrong when you link individual-level data to neighborhood-level data, and how to catch it, in whichever language you use.</p>
 
 
 </section>
