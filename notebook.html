@@ -779,7 +779,7 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 <span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>mydata_tract10 <span class="ot">&lt;-</span> <span class="fu">st_join</span>(points, tracts2010, <span class="at">join =</span> st_intersects) <span class="sc">%&gt;%</span></span>
 <span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">tract_fips10 =</span> <span class="fu">if_else</span>(place_rank <span class="sc">&gt;=</span> <span class="dv">26</span>, GEOID10, <span class="cn">NA_character_</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>From here the tract-level NaNDA files join on <code>tract_fips10</code> exactly as the ZCTA files join on <code>zcta10</code> below. Everything in Section 4 applies unchanged.</p>
+<p>From here the tract-level NaNDA files join on <code>tract_fips10</code> exactly as the ZCTA files join on <code>zcta10</code> below. Everything in Section 4 applies unchanged. The complete script is in your materials as <code>r/geocode_to_tract.R</code>, with a Python version beside it and a Stata version that goes through the Census Geocoder instead; each language folder’s README says what it needs and how long it takes.</p>
 <hr>
 </section>
 <section id="sec-crosswalk" class="level2">
