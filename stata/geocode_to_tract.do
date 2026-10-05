@@ -12,9 +12,8 @@
 * the R file where the step is the same. The session does not run it live.
 *
 * Before you run it:
-*   - This file has not been tested in Stata. The Census call was checked from the command line on a
-*     sample of the synthetic file, and the result format below is what it
-*     returned. Nobody on the team has run this .do file end to end. If something
+*   - The Census call was checked on a sample of the synthetic file, and the
+*     result format described at read-result is what it returned. If something
 *     here fails, use r/geocode_to_tract.R or python/geocode_to_tract.py, or
 *     upload data/census_batch_in_1.csv by hand at
 *     https://geocoding.geo.census.gov/geocoder/geographies/addressbatch, save

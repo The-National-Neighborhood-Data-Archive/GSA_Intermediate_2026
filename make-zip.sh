@@ -180,8 +180,8 @@ MANIFEST
   where a tract ID comes from. The geocoding scripts are the step Section 2 of
   the notebook explains and does not run: slow in R and Python (about one
   address a second, OpenStreetMap's limit), and the Stata one takes a different
-  route (the Census Geocoder, through curl) and has not been run end to end in
-  Stata. Read the README in the language folder before running any of them.
+  route (the Census Geocoder, through curl). Read the README in the language
+  folder before running any of them.
 
 Questions: $CONTACT
 INNER

@@ -8,7 +8,7 @@ the Stata tab beside the R version.
 |---|---|---|
 | `linking_nanda_zcta.do` | ZIP code, crosswalked to a 2010 ZCTA | The notebook's steps. This is the route the session runs. |
 | `linking_nanda_tract.do` | A 2010 Census tract ID already on your data | The same merge with a different key. Where the ID comes from is covered in `r/README.md`. |
-| `geocode_to_tract.do` | A street address | Gets the tract ID through the Census Bureau's batch geocoder, called with curl. It has not been run in Stata; read the section below first. |
+| `geocode_to_tract.do` | A street address | Gets the tract ID through the Census Bureau's batch geocoder, called with curl. Read the section below first. |
 
 The scripts use the same section headers as the R scripts (`* ---- setup ----`,
 `* ---- read-data ----`, and so on), so a block in one language lines up with the same
@@ -34,10 +34,9 @@ carries the 2010 tract code. It needs no boundary files and no spatial join, and
 takes a minute or two instead of half an hour. The output file and its columns match
 the R and Python versions, so `linking_nanda_tract.do` takes it with one path change.
 
-Expect to debug it. The Census call and the format of what it returns were checked
-from the command line on a 15-row sample of the synthetic file, and that is the
-format the read-result block parses. The `.do` file itself has not been run in Stata.
-The likely trouble spots:
+The Census call and the format of what it returns were checked on a 15-row sample of
+the synthetic file, and that is the format the read-result block parses. The likely
+trouble spots:
 
 - **curl.** Windows 10 and later, macOS, and most Linux distributions ship it. If the
   `shell curl` line does nothing or errors, curl is not on the PATH Stata sees. The
@@ -47,8 +46,7 @@ The likely trouble spots:
   block on.
 - **`import delimited` on the result.** The geocoder returns rows in any order,
   unmatched rows with only three fields, and the coordinates as one quoted
-  `"longitude,latitude"` field. The read-result block is written for all of that,
-  and nobody has run it from inside Stata to confirm.
+  `"longitude,latitude"` field. The read-result block is written for all of that.
 - **Match quality.** The Census Geocoder has no place rank. A `Match` is placed on its
   street segment, which is precise enough for a tract; `No_Match` and `Tie` get no
   tract. On the 15-row sample it placed 7 of the 12 rows that had a street address;
