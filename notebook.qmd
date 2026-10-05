@@ -434,7 +434,10 @@ mydata_tract10 <- st_join(points, tracts2010, join = st_intersects) %>%
 ```
 
 From here the tract-level NaNDA files join on `tract_fips10` exactly as the ZCTA files
-join on `zcta10` below. Everything in Section 4 applies unchanged.
+join on `zcta10` below. Everything in Section 4 applies unchanged. The complete script
+is in your materials as `r/geocode_to_tract.R`, with a Python version beside it and a
+Stata version that goes through the Census Geocoder instead; each language folder's
+README says what it needs and how long it takes.
 
 ---
 

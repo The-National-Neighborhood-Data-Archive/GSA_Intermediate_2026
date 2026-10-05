@@ -13,4 +13,9 @@ Thumbs.db
 data/nanda/*
 !data/nanda/README.md
 
+# What the geocoding scripts write and cache. Participants make their own.
+data/*_geocoded*
+data/census_batch_*
+data/tiger2010/
+
 **/*.quarto_ipynb

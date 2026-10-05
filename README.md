@@ -19,7 +19,7 @@ site. The NaNDA files come from ICPSR (free account); the steps are on the site.
 | `index.qmd` | Before you begin: what to expect, optional setup |
 | `notebook.qmd` | The notebook |
 | `data/` | Synthetic dataset, codebook, ZIP-to-ZCTA crosswalk; `data/nanda/README.md` has the ICPSR download steps |
-| `r/`, `stata/`, `python/` | The notebook's steps as standalone scripts, two per language: the ZIP-to-ZCTA route the session runs, and a tract route for data that already carries a 2010 tract ID. `r/README.md` says where a tract ID comes from |
+| `r/`, `stata/`, `python/` | The notebook's steps as standalone scripts, three per language: the ZIP-to-ZCTA route the session runs, a tract route for data that already carries a 2010 tract ID, and a geocoding script that gets a tract ID from a street address (the step Section 2 explains and does not run). Each folder's README says what its scripts need |
 
 ## Building it yourself
 

@@ -4,7 +4,7 @@
 #
 # The script refuses to build a ZIP a participant couldn't use:
 #   - every data file the notebook reads must be in data/
-#   - the R, Stata and Python scripts must be present, both routes each
+#   - the R, Stata and Python scripts must be present: both merge routes and the geocoder, each
 #   - the site URLs in _variables.yml must name the repo this is running in
 #     (the private working repo and the public participant repo have different names)
 # It also warns about anything still marked TODO, and removes build junk that
@@ -46,10 +46,10 @@ for f in "${REQUIRED_DATA[@]}"; do
 done
 
 # --- Gate 3: the scripts, one folder per language, both routes in each --------
-for route in zcta tract; do
-  [ -s "r/linking_nanda_$route.R"       ] || red "r/linking_nanda_$route.R is missing. The manifest promises it."
-  [ -s "stata/linking_nanda_$route.do"  ] || red "stata/linking_nanda_$route.do is missing. The manifest promises it."
-  [ -s "python/linking_nanda_$route.py" ] || red "python/linking_nanda_$route.py is missing. The manifest promises it."
+for stem in linking_nanda_zcta linking_nanda_tract geocode_to_tract; do
+  [ -s "r/$stem.R"       ] || red "r/$stem.R is missing. The manifest promises it."
+  [ -s "stata/$stem.do"  ] || red "stata/$stem.do is missing. The manifest promises it."
+  [ -s "python/$stem.py" ] || red "python/$stem.py is missing. The manifest promises it."
 done
 for lang in r stata python; do
   [ -s "$lang/README.md" ] || yellow "$lang/README.md is missing; the manifest points to it."
@@ -117,6 +117,9 @@ cp notebook.qmd _variables.yml "$STAGE/$OUT/"
 cp _offline/index.html _offline/notebook.html "$STAGE/$OUT/site/"
 rm -f "$STAGE/$OUT/data/README.md"   # repo-facing notes, not for participants
 find "$STAGE/$OUT" -name __pycache__ -type d -prune -exec rm -rf {} +   # py_compile leftovers
+# Whatever the geocoding scripts wrote or cached on this machine is not for the ZIP.
+rm -f "$STAGE/$OUT/data/"*_geocoded* "$STAGE/$OUT/data/"census_batch_*
+rm -rf "$STAGE/$OUT/data/tiger2010"
 
 # The NaNDA extracts never ship. Whatever is in data/nanda/ on this machine was
 # downloaded from ICPSR to render the page; it is not ours to redistribute.
@@ -163,17 +166,22 @@ MANIFEST
                                            and where to put them. You only need
                                            them to re-run the code.
 
-  Scripts: one folder per language, two scripts per folder. Same steps, same
-  block headers, so any two read side by side.
+  The scripts are in one folder per language, three per folder. Each language
+  uses the same steps and the same block headers, so any two can be read side
+  by side.
 
-                    ZIP-to-ZCTA route            tract route
-                    (what the session runs)      (a tract ID already on your data)
-    r/              linking_nanda_zcta.R         linking_nanda_tract.R
-    stata/          linking_nanda_zcta.do        linking_nanda_tract.do
-    python/         linking_nanda_zcta.py        linking_nanda_tract.py
+                    ZIP-to-ZCTA route            tract route                         geocoding
+                    (what the session runs)      (a tract ID already on your data)   (addresses to a tract ID)
+    r/              linking_nanda_zcta.R         linking_nanda_tract.R               geocode_to_tract.R
+    stata/          linking_nanda_zcta.do        linking_nanda_tract.do              geocode_to_tract.do
+    python/         linking_nanda_zcta.py        linking_nanda_tract.py              geocode_to_tract.py
 
   Each folder has a README.md. r/README.md explains the tract route and lists
-  where a tract ID comes from. Geocoding itself is not part of these materials.
+  where a tract ID comes from. The geocoding scripts are the step Section 2 of
+  the notebook explains and does not run: slow in R and Python (about one
+  address a second, OpenStreetMap's limit), and the Stata one takes a different
+  route (the Census Geocoder, through curl) and has not been run end to end in
+  Stata. Read the README in the language folder before running any of them.
 
 Questions: $CONTACT
 INNER

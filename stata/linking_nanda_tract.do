@@ -2,7 +2,8 @@
 * The notebook and the live session join on ZIP-to-ZCTA. This file is the same
 * merge with a different key: a 2010 Census tract ID already on your data. Where
 * that ID comes from (a geocoder, a data vendor, a survey file that carries it)
-* is your choice and is not covered here; r/README.md lists the usual sources.
+* is your choice; geocode_to_tract.do beside this file gets one from a street
+* address, and r/README.md lists the other sources.
 * Block labels match the notebook where the step is the same, so you can read
 * the two side by side. Not demonstrated live.
 *
