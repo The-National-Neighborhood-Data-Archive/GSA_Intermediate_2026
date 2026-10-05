@@ -13,8 +13,7 @@ the [notebook]({{< var site.url >}}notebook.html). Read along in a second window
 watch and come back to it afterward.
 
 Running the code yourself during the session is **optional**. The setup is below. If
-it does not work on the day, follow along. Nothing in the session depends on your
-machine.
+it does not work on the day, follow along.
 
 
 ## What you'll get
@@ -36,8 +35,7 @@ The ZIP contains:
 **The NaNDA files themselves are not in the ZIP.** NaNDA is distributed through
 [ICPSR]({{< var nanda.icpsr_url >}}), which asks for a free account, so you download
 your own. It takes about five minutes. The steps are in the optional setup below and
-in `data/nanda/README.md` inside the ZIP. You only need them to run the code; every
-output is already on the [notebook]({{< var site.url >}}notebook.html).
+in `data/nanda/README.md` inside the ZIP. You only need them to run the code.
 
 ## If you do want to run along
 
@@ -66,7 +64,7 @@ output is already on the [notebook]({{< var site.url >}}notebook.html).
    - [**{{< var nanda.ses_name >}}**]({{< var nanda.ses_doi >}}): datasets 3 and 8
      (DS0003 and DS0008).
 
-   Unzip each one, dig the data file out of the nested folders, and put all four in
+   Unzip each one, extract the data file from the nested folders, and put all four in
    `data/nanda/` inside the unzipped workshop folder. `data/nanda/README.md` has the
    filenames and the same steps in more detail.
 
@@ -75,20 +73,21 @@ output is already on the [notebook]({{< var site.url >}}notebook.html).
 
 **Stata and Python users:** equivalent `.do` files are in the `stata/` folder of the
 ZIP and `.py` scripts in `python/`. The live session is in R, but these do the same
-thing step for step and are yours to keep.
+thing step for step and are yours to keep. The R code is also there as plain scripts
+in `r/`, and each folder carries a second script for data that already has a 2010
+tract ID instead of a ZIP code.
 :::
 
 ::: {.callout-important}
 ## If setup doesn't work
 
-Save the troubleshooting for later. The notebook has every output already rendered, so
-nothing you would see by running the code is missing from it. Follow along on screen,
-and email us afterward: [{{< var nanda.contact >}}](mailto:{{< var nanda.contact >}}).
+Save the troubleshooting for later. The notebook shows every output. Follow along on
+screen, and email us afterward: [{{< var nanda.contact >}}](mailto:{{< var nanda.contact >}}).
 :::
 
 ## What we assume you already know
 
 You have used R, Stata, or another statistical package to open a dataset and join two
-tables. This is **not** an R lesson. It is about what goes wrong when you link
-individual-level data to neighborhood-level data, and how to catch it, in whichever
+tables. This session covers what goes wrong when you link individual-level data to
+neighborhood-level data, and how to catch it, in whichever
 language you use.

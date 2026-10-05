@@ -4,7 +4,7 @@
 #
 # The script refuses to build a ZIP a participant couldn't use:
 #   - every data file the notebook reads must be in data/
-#   - the Stata and Python scripts must be present
+#   - the R, Stata and Python scripts must be present, both routes each
 #   - the site URLs in _variables.yml must name the repo this is running in
 #     (the private working repo and the public participant repo have different names)
 # It also warns about anything still marked TODO, and removes build junk that
@@ -24,6 +24,7 @@ QUARTO="${QUARTO:-quarto}"
 # we are not allowed to ship.
 REQUIRED_DATA=(
   synthetic_data_v20260924.csv
+  synthetic_data_v20260924_tract10.csv
   codebook_synthetic_data_v20260924.log
   zip_to_zcta_2019.xlsx
 )
@@ -44,9 +45,15 @@ for f in "${REQUIRED_DATA[@]}"; do
   [ -s "data/$f" ] || red "data/$f is missing or empty."
 done
 
-# --- Gate 3: the Stata and Python versions -----------------------------------
-ls stata/*.do  >/dev/null 2>&1 || red "stata/ has no .do file. The page promises one."
-ls python/*.py >/dev/null 2>&1 || red "python/ has no .py file. The page promises one."
+# --- Gate 3: the scripts, one folder per language, both routes in each --------
+for route in zcta tract; do
+  [ -s "r/linking_nanda_$route.R"       ] || red "r/linking_nanda_$route.R is missing. The manifest promises it."
+  [ -s "stata/linking_nanda_$route.do"  ] || red "stata/linking_nanda_$route.do is missing. The manifest promises it."
+  [ -s "python/linking_nanda_$route.py" ] || red "python/linking_nanda_$route.py is missing. The manifest promises it."
+done
+for lang in r stata python; do
+  [ -s "$lang/README.md" ] || yellow "$lang/README.md is missing; the manifest points to it."
+done
 
 # --- Gate 4: URLs point at this repo -----------------------------------------
 # GitHub Pages lowercases the org, so compare case-insensitively.
@@ -55,6 +62,7 @@ repo_lc=$(printf '%s' "$repo" | tr '[:upper:]' '[:lower:]')
 url_fail=0
 for key in url zip repo; do
   val=$(awk -v k="  $key:" '$0 ~ "^"k {sub(/^[^"]*"/,""); sub(/".*$/,""); print; exit}' _variables.yml)
+  [ "$key" = url ] && SITE_URL="$val"   # reused in the manifest below
   val_lc=$(printf '%s' "$val" | tr '[:upper:]' '[:lower:]')
   case "$val_lc" in
     *"/$repo_lc/"*|*"/$repo_lc"|*"/$repo_lc.git") ;;
@@ -103,11 +111,12 @@ STAGE=$(mktemp -d)
 trap 'rm -rf "$STAGE"' EXIT
 mkdir -p "$STAGE/$OUT/site"
 
-cp -r data stata python "$STAGE/$OUT/"
+cp -r data r stata python "$STAGE/$OUT/"
 cp notebook.qmd _variables.yml "$STAGE/$OUT/"
 [ -f workshop.Rproj ] && cp workshop.Rproj "$STAGE/$OUT/"
 cp _offline/index.html _offline/notebook.html "$STAGE/$OUT/site/"
 rm -f "$STAGE/$OUT/data/README.md"   # repo-facing notes, not for participants
+find "$STAGE/$OUT" -name __pycache__ -type d -prune -exec rm -rf {} +   # py_compile leftovers
 
 # The NaNDA extracts never ship. Whatever is in data/nanda/ on this machine was
 # downloaded from ICPSR to render the page; it is not ours to redistribute.
@@ -121,28 +130,50 @@ fi
 
 cat > "$STAGE/$OUT/README.txt" << INNER
 Linking NaNDA With Your Data
-GSA 2026 Annual Scientific Meeting — Breakout 2 (Intermediate)
+GSA 2026 Annual Scientific Meeting, Breakout 2 (Intermediate)
 
 You do not need to run any of this. The full notebook, with every output
 already rendered, is at:
 
-  https://the-national-neighborhood-data-archive.github.io/GSA_Intermediate_2026/
+  $SITE_URL
 
 Cite it: https://doi.org/10.5281/zenodo.23071407
 
-What's in here:
-  site/      the notebook and the before-you-begin page, saved for offline
-             reading. Open site/notebook.html in any browser; no internet needed.
-  data/      synthetic dataset, its codebook, and the ZIP-to-ZCTA crosswalk.
-             The NaNDA files are NOT in here — they come from ICPSR, which
-             needs a free account. data/nanda/README.md has the three
-             downloads and where to put them. You only need them if you want
-             to re-run the code; the notebook already shows every output.
-  stata/     the Stata version of the notebook, step for step
-  python/    the Python version of the notebook, step for step
-  notebook.qmd   the notebook source (R, with the same Stata and Python
-                 steps shown one tab away on the web page). Open workshop.Rproj
-                 in RStudio and press Render to run it yourself.
+MANIFEST
+
+  README.txt          this file
+  notebook.qmd        the notebook source (R). Open workshop.Rproj in RStudio
+                      and press Render to run it yourself.
+  workshop.Rproj      the RStudio project. Open it first so every path resolves.
+  _variables.yml      names, DOIs and URLs the notebook reads
+
+  site/               the notebook and the before-you-begin page, saved for
+                      offline reading. Open site/notebook.html in any browser;
+                      no internet needed.
+
+  data/               what the scripts read
+    synthetic_data_v20260924.csv           the synthetic survey
+    synthetic_data_v20260924_tract10.csv   the same rows with a synthetic 2010
+                                           tract ID added, for the tract scripts
+    codebook_synthetic_data_v20260924.log  the codebook for both
+    zip_to_zcta_2019.xlsx                  the ZIP-to-ZCTA crosswalk (UDS Mapper, 2019)
+    nanda/                                 EMPTY except README.md. The NaNDA files
+                                           come from ICPSR, which needs a free
+                                           account; the README says which files
+                                           and where to put them. You only need
+                                           them to re-run the code.
+
+  Scripts: one folder per language, two scripts per folder. Same steps, same
+  block headers, so any two read side by side.
+
+                    ZIP-to-ZCTA route            tract route
+                    (what the session runs)      (a tract ID already on your data)
+    r/              linking_nanda_zcta.R         linking_nanda_tract.R
+    stata/          linking_nanda_zcta.do        linking_nanda_tract.do
+    python/         linking_nanda_zcta.py        linking_nanda_tract.py
+
+  Each folder has a README.md. r/README.md explains the tract route and lists
+  where a tract ID comes from. Geocoding itself is not part of these materials.
 
 Questions: $CONTACT
 INNER

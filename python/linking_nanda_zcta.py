@@ -1,6 +1,6 @@
-"""Linking NaNDA With Your Data: the Python version of the walkthrough.
+"""Linking NaNDA With Your Data: the Python version of the notebook.
 
-Each block carries the same label as the code block on the walkthrough page,
+Each block carries the same label as the code block on the notebook page,
 so you can read the two side by side. The session is run in R; this file is
 the same steps in pandas, step for step. Not demonstrated live.
 
@@ -20,8 +20,8 @@ ROOT = Path(__file__).resolve().parents[1] if "__file__" in globals() else Path.
 DATA = ROOT / "data"
 
 # ---- read-data ----
-# Our own data. `zip` is a label, not a quantity: say so, or pandas guesses
-# "number" and 03042 silently becomes 3042.
+# Our own data. `zip` is a label: say so, or pandas guesses "number" and
+# 03042 becomes 3042.
 mydata = pd.read_csv(DATA / "synthetic_data_v20260924.csv", dtype={"zip": str})
 
 # NaNDA: Social Services, ZCTA 2010, 1990-2022. Same rule for the ZCTA code.
@@ -44,7 +44,7 @@ mydata.info()
 mydata.head()
 
 # ---- inspect-identifiers ----
-# How many rows carry a ZIP we can actually look something up with?
+# Count the rows that have a ZIP.
 pd.Series({
     "rows":        len(mydata),
     "has_zip":     mydata["zip"].notna().sum(),
@@ -53,9 +53,9 @@ pd.Series({
 })
 
 # ---- inspect-address ----
-# address, city and zip are each incomplete, and not for the same rows. A row
-# with no ZIP may still have an address you could geocode, and the other way
-# round, so "how much geography do I have" depends on which route you take.
+# address, city and zip are missing on different rows. A row with no ZIP may
+# still have an address you could geocode, and the other way round, so the
+# usable geography depends on the route.
 (mydata
    .assign(address_missing=mydata["address"].isna(),
            city_missing=mydata["city"].isna(),
@@ -73,8 +73,8 @@ zipzctaxwalk2019 = pd.read_excel(DATA / "zip_to_zcta_2019.xlsx", dtype=str)
 zipzctaxwalk2019["ZIP_CODE"] = zipzctaxwalk2019["ZIP_CODE"].str.zfill(5)
 zipzctaxwalk2019["ZCTA"]     = zipzctaxwalk2019["ZCTA"].str.zfill(5)
 
-# zip_join_type is the crosswalk telling you how each ZIP got its ZCTA, or that
-# it has none. Read this before you join, not after something looks wrong.
+# zip_join_type records how each ZIP was assigned its ZCTA, or that it has
+# none. Check it before joining.
 zipzctaxwalk2019["zip_join_type"].value_counts(dropna=False)
 
 # ---- crosswalk-join ----
@@ -87,14 +87,13 @@ mydata_zcta10 = (
     .rename(columns={"ZCTA": "zcta10", "zip_join_type": "zip_join_type10"})
 )
 
-# A left join keeps every row of the left-hand table. Check it; don't assume it.
-# If this number grew, the crosswalk has more than one row per ZIP and you have
-# quietly duplicated people.
+# A left join keeps every row of the left-hand table. Compare the counts.
+# If this number grew, the crosswalk has more than one row per ZIP and some
+# people are now counted twice.
 {"rows_before": len(mydata), "rows_after": len(mydata_zcta10)}
 
-# Two different failures, worth keeping apart. A row with no ZIP never had
-# anything to look up. A row whose ZIP is missing from the crosswalk had one,
-# and it led nowhere: PO-box ZIPs, single-building ZIPs, retired ZIPs.
+# A row can lack a ZCTA for two reasons. A row with no ZIP has nothing to look
+# up. A row whose ZIP is missing from the crosswalk had a ZIP but no match: PO-box ZIPs, single-building ZIPs, retired ZIPs.
 import numpy as np
 mydata_zcta10.assign(zcta_status=np.select(
     [mydata_zcta10["zip"].isna(), mydata_zcta10["zcta10"].isna()],
@@ -102,8 +101,8 @@ mydata_zcta10.assign(zcta_status=np.select(
 ))["zcta_status"].value_counts()
 
 # ---- who-is-missing ----
-# The question a match rate cannot answer: are the people who fell out different
-# from the people who stayed, on the things the study is actually about?
+# Compare the rows that matched with those that did not, on the variables the
+# study is about.
 (mydata_zcta10.assign(has_zcta=mydata_zcta10["zcta10"].notna())
    .groupby("has_zcta")
    .agg(n=("has_zcta", "size"),
@@ -132,7 +131,7 @@ socialservices_zcta10.loc[socialservices_zcta10["year"] >= 2020, "year"].value_c
 
 # ---- join-nanda ----
 # Social Services is longitudinal, so the key is ZCTA *and* year.
-# merge(indicator=True) is the diagnostic Stata hands you as _merge: "both"
+# merge(indicator=True) does what Stata's _merge does: "both"
 # where something matched, "left_only" where nothing did. Keep it as in_nanda.
 mydata_nanda = (
     mydata_zcta10.merge(
@@ -148,7 +147,7 @@ mydata_nanda = (
     .drop(columns="_merge")
     # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year
     # of a person's records gets the same value. That assumes park provision
-    # held still across the study period. Say so in your methods.
+    # held still across the study period.
     .merge(
         parks2022_zcta10[["ZCTA19", "ANY_OPEN_PARK", "COUNT_OPEN_PARKS_TC10", "PROP_PARK_AREA_ZCTA"]],
         how="left", left_on="zcta10", right_on="ZCTA19",
@@ -191,9 +190,8 @@ match_summary(on_2010)
 
 # ---- boundaries-2020 ----
 # The same 2010-boundary codes, straight from the crosswalk, against the
-# 2020-boundary file (ICPSR 38528, DS0008). Nothing in this join knows that the
-# codes and the boundaries come from different censuses. It runs, it matches,
-# it returns a number.
+# 2020-boundary file (ICPSR 38528, DS0008). The codes and the boundaries come
+# from different censuses, and the join still returns a match rate and a mean.
 on_2020 = mydata_zcta10.merge(
     ses2018_2022_zcta20[["ZCTA20", "AFFLUENCE"]],
     how="left", left_on="zcta10", right_on="ZCTA20",
@@ -208,7 +206,7 @@ pd.concat(
 ).groupby(level="nanda_file").apply(match_summary)
 
 # ---- match-rate ----
-# The headline.
+# Overall match rate.
 pd.Series({
     "rows":           len(mydata_nanda),
     "matched":        mydata_nanda["in_nanda"].sum(),
@@ -233,12 +231,11 @@ unmatched = (
     .drop(columns="_merge")
 )
 
-# A count is not a diagnosis. A row can fail for four different reasons, and
-# the reasons call for different answers: the first two are a data-collection
-# problem, the third is a coverage limit you state in your methods, the fourth
-# is usually a boundary mismatch. Three occur in this file; the third cannot,
-# because we carried Social Services forward. It is named so the table says
-# so if that step is ever dropped.
+# A row can fail for four different reasons, and each calls for a different
+# response: the first two are a data-collection problem, the third is a
+# coverage limit, the fourth is usually a boundary mismatch. Three occur in
+# this file; the third cannot, because we carried Social Services forward.
+# The case stays in the table in case that step is removed.
 unmatched.assign(reason=np.select(
     [unmatched["zip"].isna(), unmatched["zcta10"].isna(), unmatched["year"] > 2022],
     ["no ZIP to start from", "ZIP not in the crosswalk", "year past NaNDA's coverage"],

@@ -1,5 +1,5 @@
-* Linking NaNDA With Your Data: the Stata version of the walkthrough.
-* Each block carries the same label as the code block on the walkthrough page,
+* Linking NaNDA With Your Data: the Stata version of the notebook.
+* Each block carries the same label as the code block on the notebook page,
 * so you can read the two side by side. The session is run in R; this file is
 * the same steps in Stata, step for step. Not demonstrated live.
 *
@@ -24,6 +24,8 @@ tempfile mydata socialservices parks ses2010 ses2020 xwalk mydata_zcta10 mydata_
 import delimited using "data/synthetic_data_v20260924.csv", varnames(1) clear
 capture confirm string variable zip
 if _rc tostring zip, replace format(%05.0f)
+* tostring writes a missing number as "."; blank it so missing() counts it.
+replace zip = "" if zip == "."
 save `mydata'
 
 * NaNDA: Social Services, ZCTA 2010, 1990-2022. Same rule for the ZCTA code.
@@ -55,16 +57,16 @@ describe
 list in 1/5
 
 * ---- inspect-identifiers ----
-* How many rows carry a ZIP we can actually look something up with?
+* Count the rows that have a ZIP.
 use `mydata', clear
 generate byte missing_zip = missing(zip)
 summarize missing_zip
 display "rows = " r(N) ", missing ZIP = " r(sum) ", pct missing = " %4.1f 100 * r(mean)
 
 * ---- inspect-address ----
-* address, city and zip are each incomplete, and not for the same rows. A row
-* with no ZIP may still have an address you could geocode, and the other way
-* round, so "how much geography do I have" depends on which route you take.
+* address, city and zip are missing on different rows. A row with no ZIP may
+* still have an address you could geocode, and the other way round, so the
+* usable geography depends on the route.
 use `mydata', clear
 generate byte address_missing = missing(address)
 generate byte city_missing    = missing(city)
@@ -83,8 +85,8 @@ replace ZCTA     = substr("00000", 1, 5 - strlen(ZCTA))     + ZCTA     if strlen
 keep ZIP_CODE ZCTA zip_join_type
 save `xwalk'
 
-* zip_join_type is the crosswalk telling you how each ZIP got its ZCTA, or that
-* it has none. Read this before you join, not after something looks wrong.
+* zip_join_type records how each ZIP was assigned its ZCTA, or that it has
+* none. Check it before joining.
 tabulate zip_join_type
 
 * ---- crosswalk-join ----
@@ -96,16 +98,15 @@ use `mydata', clear
 count
 local rows_before = r(N)
 
-* m:1 says "many of mine to one of theirs". If the crosswalk has two rows for
-* one ZIP, Stata stops here instead of quietly duplicating people. keep(master
-* match) is the left join: every row of ours stays, matched or not.
+* m:1 means many rows of ours to one row of theirs. If the crosswalk has two
+* rows for one ZIP, the merge stops with an error. keep(master match) is the
+* left join: every row of ours stays, matched or not.
 merge m:1 zip using `xwalk', keep(master match)
 count
 display "rows before = `rows_before', rows after = " r(N)
 
-* Two different failures, worth keeping apart. A row with no ZIP never had
-* anything to look up. A row whose ZIP is missing from the crosswalk had one,
-* and it led nowhere: PO-box ZIPs, single-building ZIPs, retired ZIPs.
+* A row can lack a ZCTA for two reasons. A row with no ZIP has nothing to look
+* up. A row whose ZIP is missing from the crosswalk had a ZIP but no match: PO-box ZIPs, single-building ZIPs, retired ZIPs.
 generate str zcta_status = "has a ZCTA"
 replace  zcta_status = "ZIP not in crosswalk" if _merge == 1
 replace  zcta_status = "no ZIP"               if missing(zip)
@@ -114,8 +115,8 @@ drop _merge
 save `mydata_zcta10'
 
 * ---- who-is-missing ----
-* The question a match rate cannot answer: are the people who fell out different
-* from the people who stayed, on the things the study is actually about?
+* Compare the rows that matched with those that did not, on the variables the
+* study is about.
 use `mydata_zcta10', clear
 generate byte has_zcta = !missing(zcta10)
 tabstat loneliness physical_activity own_pet, by(has_zcta) statistics(n mean) format(%9.3f)
@@ -160,7 +161,7 @@ drop _merge
 
 * Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
 * a person's records gets the same value. That assumes park provision held
-* still across the study period. Say so in your methods.
+* still across the study period.
 preserve
     use `parks', clear
     keep ZCTA19 ANY_OPEN_PARK COUNT_OPEN_PARKS_TC10 PROP_PARK_AREA_ZCTA
@@ -211,9 +212,8 @@ save `on_2010'
 
 * ---- boundaries-2020 ----
 * The same 2010-boundary codes, straight from the crosswalk, against the
-* 2020-boundary file (ICPSR 38528, DS0008). Nothing in this merge knows that
-* the codes and the boundaries come from different censuses. It runs, it
-* matches, it returns a number.
+* 2020-boundary file (ICPSR 38528, DS0008). The codes and the boundaries come
+* from different censuses, and the merge still returns a match rate and a mean.
 use `mydata_zcta10', clear
 merge m:1 zcta10 using `ses2020', keep(master match) nogenerate
 generate byte matched = !missing(AFFLUENCE)
@@ -240,7 +240,7 @@ replace mean_affluence = round(mean_affluence, 0.001)
 list, clean noobs
 
 * ---- match-rate ----
-* The headline.
+* Overall match rate.
 use `mydata_nanda', clear
 summarize in_nanda
 display "rows = " r(N) ", matched = " r(sum) ", match rate = " %4.1f 100 * r(mean) "%"
@@ -255,12 +255,11 @@ tabulate year in_nanda, row nofreq
 use `mydata_nanda', clear
 keep if in_nanda == 0
 
-* A count is not a diagnosis. A row can fail for four different reasons, and
-* the reasons call for different answers: the first two are a data-collection
-* problem, the third is a coverage limit you state in your methods, the fourth
-* is usually a boundary mismatch. Three occur in this file; the third cannot,
-* because we carried Social Services forward. It is named so the table says
-* so if that step is ever dropped.
+* A row can fail for four different reasons, and each calls for a different
+* response: the first two are a data-collection problem, the third is a
+* coverage limit, the fourth is usually a boundary mismatch. Three occur in
+* this file; the third cannot, because we carried Social Services forward.
+* The case stays in the table in case that step is removed.
 generate str reason = "ZCTA not in the NaNDA file"
 replace  reason = "year past NaNDA's coverage" if year > 2022
 replace  reason = "ZIP not in the crosswalk"   if missing(zcta10)

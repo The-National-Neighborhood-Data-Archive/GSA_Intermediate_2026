@@ -3,6 +3,7 @@
 /.quarto/
 /_freeze/site_libs/
 *_files/
+__pycache__/
 .Rproj.user/
 .Rhistory
 .DS_Store

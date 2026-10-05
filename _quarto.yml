@@ -9,7 +9,7 @@ project:
 
 website:
   title: "Linking NaNDA With Your Data"
-  description: "GSA 2026 online workshop — Breakout 2 (Intermediate)"
+  description: "GSA 2026 online workshop, Breakout 2 (Intermediate)"
   navbar:
     logo: assets/nanda/logo_horizontal.png
     logo-alt: "National Neighborhood Data Archive"

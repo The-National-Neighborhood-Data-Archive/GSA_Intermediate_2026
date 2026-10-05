@@ -23,6 +23,6 @@ three downloads and where they go.
 `publish/make-public.sh` strips it out of the public repo. The folder and its README
 survive all three, so the path the code reads from exists and explains itself.
 
-Anyone rendering the site needs the ICPSR files present locally — the R chunks
+Anyone rendering the site needs the ICPSR files present locally; the R chunks
 execute. `_freeze` is tracked, so once someone renders with the files in place and
 commits `_freeze`, the next person can rebuild the site without them.

@@ -4,7 +4,7 @@
 
 session:
   title: "Linking NaNDA With Your Data"
-  track: "Breakout 2 — Intermediate"
+  track: "Breakout 2, Intermediate"
   date: "October 7, 2026"
   length: "45 minutes"
   platform: "Zoom"
@@ -22,7 +22,7 @@ timing:
   identifiers: 6     # section 1
   geocoding: 4       # section 2, Robert's explanation; no live code
   crosswalk: 10      # section 3, ZIP to ZCTA
-  join: 15           # section 4, boundaries + diagnostics — do not cut this one
+  join: 15           # section 4, boundaries and diagnostics; do not cut this one
   analysis: 4        # section 5, Grace
   close: 1           # URL, thanks
   slack: 3

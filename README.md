@@ -11,7 +11,7 @@ Annual Scientific Meeting, online, October 7, 2026.
 You don't need to run anything. The notebook page shows every step with its output,
 in R, with the same step in Stata and Python one tab away. If you'd like to run it
 yourself, the materials ZIP on the site has the synthetic data, the crosswalk, the
-notebook source with its Stata and Python equivalents, and an offline copy of the
+notebook source with R, Stata and Python scripts for both routes, and an offline copy of the
 site. The NaNDA files come from ICPSR (free account); the steps are on the site.
 
 | Path | What it is |
@@ -19,7 +19,7 @@ site. The NaNDA files come from ICPSR (free account); the steps are on the site.
 | `index.qmd` | Before you begin: what to expect, optional setup |
 | `notebook.qmd` | The notebook |
 | `data/` | Synthetic dataset, codebook, ZIP-to-ZCTA crosswalk; `data/nanda/README.md` has the ICPSR download steps |
-| `stata/`, `python/` | Stata and Python versions of the R notebook |
+| `r/`, `stata/`, `python/` | The notebook's steps as standalone scripts, two per language: the ZIP-to-ZCTA route the session runs, and a tract route for data that already carries a 2010 tract ID. `r/README.md` says where a tract ID comes from |
 
 ## Building it yourself
 
