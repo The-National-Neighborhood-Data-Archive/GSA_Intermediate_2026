@@ -380,10 +380,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "da38586.0002"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>parks2022_zcta10 <span class="ot">&lt;-</span> da38586<span class="fl">.0002</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(da38586<span class="fl">.0002</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"nanda"</span>, <span class="st">"38528-0003-Data.rda"</span>)))   <span class="co"># SES, ZCTA 2010, 2008-2017</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The object keeps Robert's name, parks2022. The file is the 2018 ParkServe</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>parks2022_zcta10 <span class="ot">&lt;-</span> da38586<span class="fl">.0002</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(da38586<span class="fl">.0002</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">load</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"nanda"</span>, <span class="st">"38528-0003-Data.rda"</span>)))   <span class="co"># SES, ZCTA 2010, 2008-2017</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "da38528.0003"</code></pre>
 </div>
@@ -416,20 +418,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>* Parks and Socioeconomic Status: take the Stata <span class="kw">format</span> from ICPSR. Variable</span>
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>* names arrive <span class="kw">in</span> <span class="fu">upper</span> <span class="kw">case</span>, <span class="kw">as</span> the ICPSR <span class="kw">codebook</span> lists them.</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/nanda/38586-0002-Data.dta"</span>, <span class="kw">clear</span>          <span class="co">// Parks, ZCTA, 2022</span></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="kw">confirm</span> <span class="fu">string</span> <span class="kw">variable</span> ZCTA19</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="dt">_rc</span> <span class="kw">tostring</span> ZCTA19, <span class="kw">replace</span> <span class="kw">format</span>(%05.0f)</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> <span class="ot">`parks'</span></span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/nanda/38528-0003-Data.dta"</span>, <span class="kw">clear</span>          <span class="co">// SES, ZCTA 2010, 2008-2017</span></span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="kw">confirm</span> <span class="fu">string</span> <span class="kw">variable</span> ZCTA10</span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="dt">_rc</span> <span class="kw">tostring</span> ZCTA10, <span class="kw">replace</span> <span class="kw">format</span>(%05.0f)</span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> <span class="ot">`ses2010'</span></span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/nanda/38528-0008-Data.dta"</span>, <span class="kw">clear</span>          <span class="co">// SES, ZCTA 2020, 2018-2022</span></span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="kw">confirm</span> <span class="fu">string</span> <span class="kw">variable</span> ZCTA20</span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="dt">_rc</span> <span class="kw">tostring</span> ZCTA20, <span class="kw">replace</span> <span class="kw">format</span>(%05.0f)</span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> <span class="ot">`ses2020'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>* The object keeps Robert's <span class="bn">name</span>, parks2022. The file is the 2018 ParkServe</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>* snapshot (DS0002, 2010 boundaries); ICPSR retitled it <span class="kw">in</span> October 2026.</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/nanda/38586-0002-Data.dta"</span>, <span class="kw">clear</span>          <span class="co">// Parks, ZCTA, 2018</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="kw">confirm</span> <span class="fu">string</span> <span class="kw">variable</span> ZCTA19</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="dt">_rc</span> <span class="kw">tostring</span> ZCTA19, <span class="kw">replace</span> <span class="kw">format</span>(%05.0f)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> <span class="ot">`parks'</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/nanda/38528-0003-Data.dta"</span>, <span class="kw">clear</span>          <span class="co">// SES, ZCTA 2010, 2008-2017</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="kw">confirm</span> <span class="fu">string</span> <span class="kw">variable</span> ZCTA10</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="dt">_rc</span> <span class="kw">tostring</span> ZCTA10, <span class="kw">replace</span> <span class="kw">format</span>(%05.0f)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> <span class="ot">`ses2010'</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"data/nanda/38528-0008-Data.dta"</span>, <span class="kw">clear</span>          <span class="co">// SES, ZCTA 2020, 2018-2022</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="kw">confirm</span> <span class="fu">string</span> <span class="kw">variable</span> ZCTA20</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="kw">if</span> <span class="dt">_rc</span> <span class="kw">tostring</span> ZCTA20, <span class="kw">replace</span> <span class="kw">format</span>(%05.0f)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="kw">save</span> <span class="ot">`ses2020'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Our own data. `zip` is a label: say so, or pandas guesses "number" and</span></span>
@@ -447,9 +451,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    df[col] <span class="op">=</span> df[col].astype(<span class="bu">str</span>).<span class="bu">str</span>.replace(<span class="vs">r"</span><span class="ch">\.</span><span class="vs">0</span><span class="dv">$</span><span class="vs">"</span>, <span class="st">""</span>, regex<span class="op">=</span><span class="va">True</span>).<span class="bu">str</span>.zfill(<span class="dv">5</span>)</span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>parks2022_zcta10    <span class="op">=</span> zcta_text(pd.read_stata(DATA <span class="op">/</span> <span class="st">"nanda"</span> <span class="op">/</span> <span class="st">"38586-0002-Data.dta"</span>), <span class="st">"ZCTA19"</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>ses2008_2017_zcta10 <span class="op">=</span> zcta_text(pd.read_stata(DATA <span class="op">/</span> <span class="st">"nanda"</span> <span class="op">/</span> <span class="st">"38528-0003-Data.dta"</span>), <span class="st">"ZCTA10"</span>)</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>ses2018_2022_zcta20 <span class="op">=</span> zcta_text(pd.read_stata(DATA <span class="op">/</span> <span class="st">"nanda"</span> <span class="op">/</span> <span class="st">"38528-0008-Data.dta"</span>), <span class="st">"ZCTA20"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># The object keeps Robert's name, parks2022. The file is the 2018 ParkServe</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>parks2022_zcta10    <span class="op">=</span> zcta_text(pd.read_stata(DATA <span class="op">/</span> <span class="st">"nanda"</span> <span class="op">/</span> <span class="st">"38586-0002-Data.dta"</span>), <span class="st">"ZCTA19"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>ses2008_2017_zcta10 <span class="op">=</span> zcta_text(pd.read_stata(DATA <span class="op">/</span> <span class="st">"nanda"</span> <span class="op">/</span> <span class="st">"38528-0003-Data.dta"</span>), <span class="st">"ZCTA10"</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>ses2018_2022_zcta20 <span class="op">=</span> zcta_text(pd.read_stata(DATA <span class="op">/</span> <span class="st">"nanda"</span> <span class="op">/</span> <span class="st">"38528-0008-Data.dta"</span>), <span class="st">"ZCTA20"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1231,7 +1237,7 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 <span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"zcta10"</span>, <span class="st">"year"</span>)</span>
 <span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">in_nanda =</span> <span class="fu">coalesce</span>(in_nanda, <span class="cn">FALSE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year of</span></span>
 <span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># a person's records gets the same value. That assumes park provision held</span></span>
 <span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># still across the study period.</span></span>
 <span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
@@ -1266,7 +1272,7 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 <span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="kw">generate</span> <span class="kw">byte</span> in_nanda = (<span class="dt">_merge</span> == 3)</span>
 <span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="dt">_merge</span></span>
 <span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>* Parks is a single 2022 snapshot, so it joins <span class="kw">on</span> ZCTA alone and every <span class="fu">year</span> <span class="kw">of</span></span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>* Parks is a single 2018 snapshot, so it joins <span class="kw">on</span> ZCTA alone and every <span class="fu">year</span> <span class="kw">of</span></span>
 <span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>* a person's records gets the same <span class="ot">value</span>. That assumes park provision held</span>
 <span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>* still across the study period.</span>
 <span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a><span class="kw">preserve</span></span>
@@ -1297,7 +1303,7 @@ $ own_pet             &lt;dbl&gt; 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1
 <span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    .assign(in_nanda<span class="op">=</span><span class="kw">lambda</span> d: d[<span class="st">"_merge"</span>].eq(<span class="st">"both"</span>))</span>
 <span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    .drop(columns<span class="op">=</span><span class="st">"_merge"</span>)</span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year</span></span>
 <span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># of a person's records gets the same value. That assumes park provision</span></span>
 <span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># held still across the study period.</span></span>
 <span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
