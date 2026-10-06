@@ -35,6 +35,8 @@ def zcta_text(df, col):
     df[col] = df[col].astype(str).str.replace(r"\.0$", "", regex=True).str.zfill(5)
     return df
 
+# The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+# snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.
 parks2022_zcta10    = zcta_text(pd.read_stata(DATA / "nanda" / "38586-0002-Data.dta"), "ZCTA19")
 ses2008_2017_zcta10 = zcta_text(pd.read_stata(DATA / "nanda" / "38528-0003-Data.dta"), "ZCTA10")
 ses2018_2022_zcta20 = zcta_text(pd.read_stata(DATA / "nanda" / "38528-0008-Data.dta"), "ZCTA20")
@@ -145,7 +147,7 @@ mydata_nanda = (
     )
     .assign(in_nanda=lambda d: d["_merge"].eq("both"))
     .drop(columns="_merge")
-    # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year
+    # Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year
     # of a person's records gets the same value. That assumes park provision
     # held still across the study period.
     .merge(

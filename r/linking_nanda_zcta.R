@@ -33,6 +33,8 @@ socialservices_zcta10 <- read_csv(
 # object into your session under a name ICPSR picked, and returns that name.
 # Print it, then rename it to something you will recognise later.
 print(load(here("data", "nanda", "38586-0002-Data.rda")))
+# The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+# snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.
 parks2022_zcta10 <- da38586.0002
 rm(da38586.0002)
 
@@ -153,7 +155,7 @@ mydata_nanda <- mydata_zcta10 %>%
     by = c("zcta10", "year")
   ) %>%
   mutate(in_nanda = coalesce(in_nanda, FALSE)) %>%
-  # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
+  # Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year of
   # a person's records gets the same value. That assumes park provision held
   # still across the study period.
   left_join(

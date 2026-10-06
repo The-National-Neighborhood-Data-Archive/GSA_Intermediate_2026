@@ -37,6 +37,14 @@ replace zip = "" if zip == "."
 capture confirm string variable tract_fips10
 if _rc tostring tract_fips10, replace format(%011.0f)
 replace tract_fips10 = "" if tract_fips10 == "."
+* A file from geocode_to_tract.do also carries GEOID10 (lowercase after import).
+* Same treatment, only if the column is there.
+capture confirm variable geoid10
+if !_rc {
+    capture confirm string variable geoid10
+    if _rc tostring geoid10, replace format(%011.0f)
+    replace geoid10 = "" if geoid10 == "."
+}
 save `mydata'
 
 * NaNDA: Social Services, tract 2010, 1990-2022. Same rule for the tract ID.
@@ -47,7 +55,9 @@ save `socialservices'
 
 * Parks and Socioeconomic Status: take the Stata format from ICPSR. Variable
 * names arrive in upper case, as the ICPSR codebook lists them.
-use "data/nanda/38586-0001-Data.dta", clear          // Parks, tract 2010, 2022
+* The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+* snapshot (DS0001, 2010 boundaries); ICPSR retitled it in October 2026.
+use "data/nanda/38586-0001-Data.dta", clear          // Parks, tract 2010, 2018
 capture confirm string variable TRACT_FIPS10
 if _rc tostring TRACT_FIPS10, replace format(%011.0f)
 save `parks'
@@ -124,7 +134,7 @@ merge m:1 tract_fips10 year using `socialservices', keep(master match)
 generate byte in_nanda = (_merge == 3)
 drop _merge
 
-* Parks is a single 2022 snapshot, so it joins on tract alone and every year of
+* Parks is a single 2018 snapshot, so it joins on tract alone and every year of
 * a person's records gets the same value. That assumes park provision held
 * still across the study period.
 preserve

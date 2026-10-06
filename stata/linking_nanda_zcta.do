@@ -36,7 +36,9 @@ save `socialservices'
 
 * Parks and Socioeconomic Status: take the Stata format from ICPSR. Variable
 * names arrive in upper case, as the ICPSR codebook lists them.
-use "data/nanda/38586-0002-Data.dta", clear          // Parks, ZCTA, 2022
+* The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+* snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.
+use "data/nanda/38586-0002-Data.dta", clear          // Parks, ZCTA, 2018
 capture confirm string variable ZCTA19
 if _rc tostring ZCTA19, replace format(%05.0f)
 save `parks'
@@ -159,7 +161,7 @@ merge m:1 zcta10 year using `socialservices', keep(master match)
 generate byte in_nanda = (_merge == 3)
 drop _merge
 
-* Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
+* Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year of
 * a person's records gets the same value. That assumes park provision held
 * still across the study period.
 preserve

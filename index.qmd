@@ -60,7 +60,7 @@ in `data/nanda/README.md` inside the ZIP. You only need them to run the code.
    - [**{{< var nanda.social_services_name >}}**]({{< var nanda.social_services_doi >}}):
      the ZCTA 2010 file.
    - [**{{< var nanda.parks_name >}}**]({{< var nanda.parks_doi >}}): dataset 2
-     (DS0002).
+     (DS0002), "Parks by ZIP Code Tabulation Area, 2018 (2010 Boundaries)".
    - [**{{< var nanda.ses_name >}}**]({{< var nanda.ses_doi >}}): datasets 3 and 8
      (DS0003 and DS0008).
 

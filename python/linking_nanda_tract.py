@@ -30,7 +30,8 @@ DATA = ROOT / "data"
 # first can be a zero. Read it as text, or Alabama's tracts lose a digit.
 mydata_tract10 = pd.read_csv(
     DATA / "synthetic_data_v20260924_tract10.csv",
-    dtype={"zip": str, "tract_fips10": str},
+    # GEOID10 is in a file from geocode_to_tract.py; pandas ignores the key otherwise.
+    dtype={"zip": str, "tract_fips10": str, "GEOID10": str},
 )
 mydata_tract10["tract_fips10"] = mydata_tract10["tract_fips10"].str.zfill(11)
 
@@ -47,6 +48,8 @@ def tract_text(df, col):
     df[col] = df[col].astype(str).str.replace(r"\.0$", "", regex=True).str.zfill(11)
     return df
 
+# The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+# snapshot (DS0001, 2010 boundaries); ICPSR retitled it in October 2026.
 parks2022_tract10    = tract_text(pd.read_stata(DATA / "nanda" / "38586-0001-Data.dta"), "TRACT_FIPS10")
 ses2008_2017_tract10 = tract_text(pd.read_stata(DATA / "nanda" / "38528-0002-Data.dta"), "TRACT_FIPS10")
 ses2018_2022_tract10 = tract_text(pd.read_stata(DATA / "nanda" / "38528-0006-Data.dta"), "TRACT_FIPS10")
@@ -113,7 +116,7 @@ mydata_nanda = (
     )
     .assign(in_nanda=lambda d: d["_merge"].eq("both"))
     .drop(columns="_merge")
-    # Parks is a single 2022 snapshot, so it joins on tract alone and every year
+    # Parks is a single 2018 snapshot, so it joins on tract alone and every year
     # of a person's records gets the same value. That assumes park provision
     # held still across the study period.
     .merge(

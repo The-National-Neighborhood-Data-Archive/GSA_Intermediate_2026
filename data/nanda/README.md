@@ -20,8 +20,12 @@ names are the same.
 | # | Dataset | Link | What to take |
 |---|---|---|---|
 | 1 | NaNDA: Social Services, ZCTA | <https://doi.org/10.3886/ICPSR208207.V5> | the ZCTA 2010 file, `nanda_socials_Zcta10_1990-2022_01.csv` |
-| 2 | NaNDA: Parks | <https://doi.org/10.3886/ICPSR38586> | **dataset 2** (DS0002), the ZCTA file |
+| 2 | NaNDA: Parks | <https://doi.org/10.3886/ICPSR38586> | **dataset 2** (DS0002), "Parks by ZIP Code Tabulation Area, 2018 (2010 Boundaries)" |
 | 3 | NaNDA: Socioeconomic Status | <https://doi.org/10.3886/ICPSR38528> | **datasets 3 and 8** (DS0003 and DS0008) |
+
+The Parks data are a 2018 snapshot on 2010 boundaries. ICPSR retitled the Parks datasets
+in October 2026 to say so; the codebooks inside the download were not changed and still
+carry the old titles, which named only the census year.
 
 Datasets 3 and 8 of Socioeconomic Status are both needed, and both are used in
 Section 4: DS0003 is drawn on 2010 ZCTA boundaries (2008–2017), DS0008 on 2020 boundaries
@@ -64,7 +68,7 @@ files of the same three studies. Same ICPSR pages, different datasets:
 | # | Dataset | Link | What to take |
 |---|---|---|---|
 | 1 | NaNDA: Social Services, tract | <https://doi.org/10.3886/ICPSR208207.V5> | the tract 2010 file, `nanda_socials_Tract10_1990-2022_01.csv` |
-| 2 | NaNDA: Parks | <https://doi.org/10.3886/ICPSR38586> | **dataset 1** (DS0001), the tract file |
+| 2 | NaNDA: Parks | <https://doi.org/10.3886/ICPSR38586> | **dataset 1** (DS0001), "Parks by Census Tract, 2018 (2010 Boundaries)" |
 | 3 | NaNDA: Socioeconomic Status | <https://doi.org/10.3886/ICPSR38528> | **datasets 2 and 6** (DS0002 and DS0006), both on 2010 tract boundaries |
 
 Put them in this same folder, flat, beside the ZCTA files:

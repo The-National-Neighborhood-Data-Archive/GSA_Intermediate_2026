@@ -25,6 +25,10 @@ mydata_tract10 <- read_csv(
   here("data", "synthetic_data_v20260924_tract10.csv"),
   col_types = cols(zip = col_character(), tract_fips10 = col_character())
 )
+# A file from geocode_to_tract.R also carries GEOID10. Restore its leading zero
+# the same way; any_of() does nothing when the column is absent.
+mydata_tract10 <- mydata_tract10 %>%
+  mutate(across(any_of("GEOID10"), ~ str_pad(.x, 11, pad = "0")))
 
 # NaNDA: Social Services, tract 2010, 1990-2022. Same rule for the tract ID.
 socialservices_tract10 <- read_csv(
@@ -35,7 +39,9 @@ socialservices_tract10 <- read_csv(
 # Parks and Socioeconomic Status come from ICPSR as .rda files. load() drops an
 # object into your session under a name ICPSR picked, and returns that name.
 # Print it, then rename it to something you will recognise later.
-print(load(here("data", "nanda", "38586-0001-Data.rda")))   # Parks, tract 2010, 2022
+print(load(here("data", "nanda", "38586-0001-Data.rda")))   # Parks, tract 2010, 2018
+# The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+# snapshot (DS0001, 2010 boundaries); ICPSR retitled it in October 2026.
 parks2022_tract10 <- da38586.0001
 rm(da38586.0001)
 
@@ -120,7 +126,7 @@ mydata_nanda <- mydata_tract10 %>%
     by = c("tract_fips10", "year")
   ) %>%
   mutate(in_nanda = coalesce(in_nanda, FALSE)) %>%
-  # Parks is a single 2022 snapshot, so it joins on tract alone and every year of
+  # Parks is a single 2018 snapshot, so it joins on tract alone and every year of
   # a person's records gets the same value. That assumes park provision held
   # still across the study period.
   left_join(

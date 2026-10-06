@@ -118,6 +118,8 @@ socialservices_zcta10 <- read_csv(
 # object into your session under a name ICPSR picked, and returns that name.
 # Print it, then rename it to something you will recognise later.
 print(load(here("data", "nanda", "38586-0002-Data.rda")))
+# The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+# snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.
 parks2022_zcta10 <- da38586.0002
 rm(da38586.0002)
 
@@ -150,7 +152,9 @@ save `socialservices'
 
 * Parks and Socioeconomic Status: take the Stata format from ICPSR. Variable
 * names arrive in upper case, as the ICPSR codebook lists them.
-use "data/nanda/38586-0002-Data.dta", clear          // Parks, ZCTA, 2022
+* The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+* snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.
+use "data/nanda/38586-0002-Data.dta", clear          // Parks, ZCTA, 2018
 capture confirm string variable ZCTA19
 if _rc tostring ZCTA19, replace format(%05.0f)
 save `parks'
@@ -184,6 +188,8 @@ def zcta_text(df, col):
     df[col] = df[col].astype(str).str.replace(r"\.0$", "", regex=True).str.zfill(5)
     return df
 
+# The object keeps Robert's name, parks2022. The file is the 2018 ParkServe
+# snapshot (DS0002, 2010 boundaries); ICPSR retitled it in October 2026.
 parks2022_zcta10    = zcta_text(pd.read_stata(DATA / "nanda" / "38586-0002-Data.dta"), "ZCTA19")
 ses2008_2017_zcta10 = zcta_text(pd.read_stata(DATA / "nanda" / "38528-0003-Data.dta"), "ZCTA10")
 ses2018_2022_zcta20 = zcta_text(pd.read_stata(DATA / "nanda" / "38528-0008-Data.dta"), "ZCTA20")
@@ -809,7 +815,7 @@ mydata_nanda <- mydata_zcta10 %>%
     by = c("zcta10", "year")
   ) %>%
   mutate(in_nanda = coalesce(in_nanda, FALSE)) %>%
-  # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
+  # Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year of
   # a person's records gets the same value. That assumes park provision held
   # still across the study period.
   left_join(
@@ -842,7 +848,7 @@ merge m:1 zcta10 year using `socialservices', keep(master match)
 generate byte in_nanda = (_merge == 3)
 drop _merge
 
-* Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year of
+* Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year of
 * a person's records gets the same value. That assumes park provision held
 * still across the study period.
 preserve
@@ -876,7 +882,7 @@ mydata_nanda = (
     )
     .assign(in_nanda=lambda d: d["_merge"].eq("both"))
     .drop(columns="_merge")
-    # Parks is a single 2022 snapshot, so it joins on ZCTA alone and every year
+    # Parks is a single 2018 snapshot, so it joins on ZCTA alone and every year
     # of a person's records gets the same value. That assumes park provision
     # held still across the study period.
     .merge(
